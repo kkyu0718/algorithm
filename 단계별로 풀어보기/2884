@@ -1,0 +1,12 @@
+h, m = input().split()
+h = int(h)
+m = int(m)
+m_minus = m - 45
+if m_minus < 0 :
+
+    h = h-1
+    if h< 0 :
+        h = 24 + h
+    m_minus = 60 + m_minus
+
+print(h, m_minus)

@@ -1,0 +1,12 @@
+num, pivot = map(int, input().split(" "))
+numlist = map(int, input().split(" "))
+# pivot = 5
+# numlist = '1 10 4 9 2 3 8 5 7 6'.split()
+# numlist = list(map(int, numlist))
+# print ("pivot is ", pivot)
+# print ("numlist is", numlist)
+result = list(filter(lambda x : x < pivot, numlist))
+for res in result :
+    print(res, end = " ")
+# print(list(num for num in numlist if num < pivot ))
+

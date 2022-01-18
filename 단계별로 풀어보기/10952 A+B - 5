@@ -1,0 +1,8 @@
+while (True):
+    pair = input().split(" ")
+    pair = list(map(int, pair))
+    if pair == [0, 0]: break
+    num1 = pair[0]
+    num2 = pair[1]
+    res = num1 + num2
+    print(res)

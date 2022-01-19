@@ -1,0 +1,15 @@
+count = int(input())
+while (True) :
+    try:
+        lst = list(map(int, input().split()))
+        # print(lst)
+        num = lst[0]
+        scores = lst[1:]
+        avg = sum(scores) / num
+        filter_lst = list(filter(lambda x: x > avg, scores))
+        # print(filter_lst)
+        print(f'{len(filter_lst)/num * 100:.3f}%')
+
+
+    except :
+        break

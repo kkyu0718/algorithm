@@ -1,0 +1,11 @@
+numlist = set(range(1,10001))
+new_numlist = set()
+for num in numlist :
+    new_num = num + sum (map (int, str(num)))
+    if new_num <= 10000:
+        new_numlist.add(new_num)
+numlist = numlist - new_numlist
+
+for i in sorted(numlist):
+    print(i)
+# print(len(numlist))

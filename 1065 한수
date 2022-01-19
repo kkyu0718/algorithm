@@ -1,0 +1,15 @@
+num = int(input())
+count = 0
+for i in range(1, num+1):
+    numlist = list(map(int,str(i)))
+    len_numlist = len(numlist)
+    sub_set = set()
+    if len_numlist == 1:
+        count = count + 1
+    else:
+        for idx in range(0,len_numlist-1):
+            sub_set.add(numlist[idx + 1] - numlist[idx] )
+        if len(sub_set)==1 :
+            count = count + 1
+
+print(count)

@@ -1,0 +1,14 @@
+num = list(map(int, input().split()))[0]
+num1 = num // 10 # 몫
+num2 = num % 10 # 나머지
+i = 0
+while(True):
+    sum = num1 + num2
+    add = sum % 10
+    result = num2 * 10 + add
+    i = i+1
+    if (result == num ):
+        break
+    num1 = result // 10
+    num2 = result % 10
+print(i)

@@ -1,0 +1,7 @@
+count = int(input())
+lst = list(map(int, input().split()))
+# print(count, lst)
+max = max(lst)
+new_lst = list(map(lambda x: x/max*100, lst))
+avg = sum(new_lst) / len(new_lst)
+print(avg)

@@ -1,0 +1,16 @@
+count = int(input())
+while (True) :
+    try:
+        test = list(input())
+        score = 0
+        count = 0
+        for letter in test:
+            if letter == 'O' :
+                count = count + 1
+                score = score + count
+            else :
+                count = 0
+            # print("middle score", score)
+        print(score)
+    except :
+        break

@@ -1,0 +1,19 @@
+word = input().upper()
+# word = 'abcAB'.upper()
+lst = list(word)
+unique = list(set(word))
+result = dict()
+for u in unique :
+    count = lst.count(u)
+    result[u] = count
+# sort = sorted(result.items(), key = lambda x : x[1], reverse=True)
+# print(result.values())
+maxval = max(result.values())
+# print(maxval)
+vallist = list(result.values())
+# print(vallist)
+if vallist.count(maxval) > 1 :
+    print("?")
+else :
+    reverse_result = dict(map(reversed, result.items()))
+    print(reverse_result[maxval])

@@ -1,0 +1,21 @@
+num = int(input())
+b = 0
+min_res = float('inf')
+while (3 * b <= num) :
+    min_cal = (2 * b + num) / 5
+    if (min_cal % 1) == 0:
+        min_cal = int(min_cal)
+        if min_cal < min_res :
+            min_res = min_cal
+            min_b = b
+            min_a = min_res - min_b
+    else :
+        pass
+    b = b + 1
+# 5a + 3b = num
+# 5a + 5b = 5min
+# 2b = 5min - num
+# min = ( 2b + num ) / 5
+if min_res == float('inf'):
+    print(-1)
+else : print(min_a + min_b)

@@ -1,0 +1,23 @@
+num = int(input())
+# num = 1
+for i in range(num):
+    count = 1
+    x, y = map(int, input().split())
+    dest = y - x
+    while (True):
+        maxnum = count // 2
+        if (count % 2) == 1:
+            maxnum = maxnum + 1
+            result = str(maxnum)
+        else:
+            result = str(maxnum) + str(maxnum)
+        maxnum = maxnum - 1
+        while (maxnum != 0):
+            result = str(maxnum) + str(result) + str(maxnum)
+            maxnum = maxnum - 1
+        result = list(map(int, result))
+        # print(result)
+        if (dest <= sum(result)):
+            print(count)
+            break
+        count = count + 1

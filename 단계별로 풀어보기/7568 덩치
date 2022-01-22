@@ -1,0 +1,22 @@
+num = int(input())
+lst = list()
+rank = list()
+for i in range(num) :
+    x,y = map(int, input().split())
+    lst.append((x,y))
+for i in range(num) :
+    weight, height = lst[i]
+    # print(weight, height)
+    count = 0
+    for j in range(num) :
+        if i == j :
+            pass
+        if (weight < lst[j][0]) & (height < lst[j][1]):
+            count = count + 1
+            # print("addition!", count)
+    rank.append(count+1)
+# print(rank)
+
+for i in range(0, num):
+    # print(i)
+    print(rank[i] , end = " ")

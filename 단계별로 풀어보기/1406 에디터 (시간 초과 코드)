@@ -1,0 +1,33 @@
+import sys
+snt = sys.stdin.readline()
+snt = snt.strip()
+num = int(sys.stdin.readline())
+cursor = len(snt)
+# print(cursor)
+for i in range(num) :
+    cmd_raw = sys.stdin.readline()
+    lst = cmd_raw.split()
+    cmd = lst[0]
+    if cmd == 'L':
+        if cursor == 0 :
+            pass
+        else:
+            cursor = cursor - 1
+    elif cmd == 'D' :
+        if cursor == len(snt) :
+            pass
+        else :
+            cursor = cursor + 1
+    elif cmd == 'B':
+        if cursor == 0:
+            pass
+        else :
+            snt = snt[:cursor-1] + snt[cursor:]
+            cursor = cursor - 1
+            # del snt[cursor]
+    elif cmd == 'P':
+        step = lst[1]
+        snt = snt[:cursor] + step + snt[cursor:]
+        cursor = cursor + 1
+print(snt)
+

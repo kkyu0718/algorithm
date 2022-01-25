@@ -1,0 +1,26 @@
+import sys
+num = int(sys.stdin.readline())
+for i in range(num):
+    letters = sys.stdin.readline()
+
+    # print(letters, ' ' in letters)
+    lst = list()
+    flag = True
+    for letter in letters :
+        if letter == '(':
+            lst.append('(')
+        elif letter == ')' :
+            try :
+                lst.pop()
+            except :
+                print("NO")
+                flag = False
+                break
+        # print(lst)
+    # print(flag)
+    if flag == True:
+        # print(len(lst))
+        if len(lst) == 0 :
+            print("YES")
+        else :
+            print("NO")

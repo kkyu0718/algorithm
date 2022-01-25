@@ -1,0 +1,19 @@
+from itertools import product
+from itertools import permutations
+from itertools import combinations
+letters = ''
+for i in range(9):
+    letters += input() + ' '
+# print(letters)
+heights = list(map(int, letters.split()))
+# print(list(permutations(heights, 2)))
+combinations = list(combinations(heights, 7))
+# items = [[1,2], heights]
+# print(list(product(*items)))
+for comb in combinations :
+    total = sum(comb)
+    if total == 100 :
+        comb = sorted(comb)
+        for t in comb :
+            print(t)
+        break

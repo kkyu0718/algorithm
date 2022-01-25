@@ -1,0 +1,29 @@
+import sys
+num = int(sys.stdin.readline())
+stk = []
+count = 0
+outlist = []
+flag = True
+for i in range(num):
+    target = int(sys.stdin.readline())
+    try :
+        top = stk[-1]
+    except :
+        top = None
+    if (top == None) or (top < target):
+        while(count != target) :
+            count = count + 1
+            stk.append(count)
+            outlist.append('+')
+        stk.pop()
+        outlist.append('-')
+    elif top > target :
+        print("NO")
+        flag = False
+        break
+    else :
+        stk.pop()
+        outlist.append('-')
+if flag == True :
+    for i in outlist:
+        print(i)

@@ -1,0 +1,100 @@
+# num = int(input())
+num = 9
+# num = 2
+# line = '< >'
+line = '> < < < > > > < <'
+letters = line.split()
+# print('split', letters)
+chunks = []
+chunk = []
+for i in range(len(letters)):  # 0,1
+    if i == (len(letters) - 1):
+        if letters[i - 1] == letters[i]:
+            chunk.append(letters[i])
+            chunks.append(chunk)
+            break
+        else:
+            if len(chunk) != 0:
+                chunks.append(chunk)
+            chunks.append(list(letters[i]))
+            break
+    if letters[i] == letters[i + 1]:
+        chunk.append(letters[i])
+    else:
+        chunk.append(letters[i])
+        chunks.append(chunk)
+        chunk = []
+print(chunks)
+# ####max#########################################
+# numlist = [i for i in range(9, 9-num -1, -1)]
+# # print(num, numlist)
+# for chunk in chunks:
+#     # print('new chunk----------', chunk)
+#     idx = chunks.index(chunk)
+#     #초기 값 설정
+#     if idx == 0:
+#         if chunk[0] == '<':
+#             length = len(chunk) #1
+#             for i in range(length,-1,-1): #1,0
+#                 n = max(numlist)
+#                 print(n-i, end=' ')
+#                 numlist.remove(n-i)
+#         else:
+#             n = max(numlist) #0
+#             length = len(chunk) # 1
+#             for i in range(length, 0, -1):  # 1,0
+#                 print(n , end=' ') #9/8,9
+#                 numlist.remove(n)
+#         continue
+#
+#     if chunk[0] == '>':
+#         length = len(chunk) -1 #3
+#         if length == 0:
+#             n = max(numlist)
+#             print(n, end = ' ')
+#             numlist.remove(n)
+#         else :
+#             for i in range(0, length): #0,1,2
+#                 n = max(numlist)
+#                 print(n, end=' ')
+#                 numlist.remove(n)
+#     else:
+#         n = max(numlist)
+#         length = len(chunk)
+#         for i in range(length, -1, -1) : # 3,2,1,0
+#             print(n - i, end = ' ')
+#             numlist.remove(n-i)
+####min#########################################
+numlist = [i for i in range(9, 9 - num - 1, -1)]
+# print(num, numlist)
+for chunk in chunks:
+    # print('new chunk----------', chunk)
+    idx = chunks.index(chunk)
+    # 초기 값 설정
+    if idx == 0:
+        if chunk[0] == '>':
+            length = len(chunk)  # 1
+            for i in range(length, -1, -1):  # 1,0
+                n = min(numlist)
+                print(n + i, end=' ')
+                numlist.remove(n + i)
+        else:
+            n = min(numlist)  # 0
+            length = len(chunk)  # 1
+            for i in range(length, 0, -1):  # 1,0
+                print(n, end=' ')  # 9/8,9
+                numlist.remove(n)
+        continue
+
+    if chunk[0] == '<':
+        length = len(chunk)  # 3
+        for i in range(length-1):  # 0,1,2
+            n = min(numlist)
+            print(n, end=' ')
+            numlist.remove(n)
+    else:
+        n = min(numlist)
+        length = len(chunk)
+        for i in range(length, -1, -1):  # 3,2,1,0
+            print(n + i, end=' ')
+            numlist.remove(n + i)

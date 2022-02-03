@@ -1,0 +1,45 @@
+import sys
+class Stack() :
+    def __init__(self):
+        self.items = []
+    def push(self, X):
+        self.items.append(X)
+    def pop(self):
+        try :
+            return self.items.pop(0)
+        except :
+            return -1
+        # return self.items.pop(0) if self.size() != 0 else -1
+    def size(self):
+        return len(self.items)
+    def empty(self):
+        return 1 if self.size() == 0 else 0
+    def front(self):
+        try :
+            return self.items[0]
+        except :
+            return -1
+        # return self.items[0] if self.empty() == 0 else -1
+    def back(self):
+        try :
+            return self.items[-1]
+        except :
+            return -1
+        # return self.items[-1] if self.empty() == 0 else -1
+
+num = int(sys.stdin.readline())
+que = Stack()
+for i in range(num):
+    cmd = sys.stdin.readline().split()
+    if cmd[0] == 'push' :
+        que.push(cmd[1])
+    elif cmd[0] == 'pop' :
+        print(que.pop())
+    elif cmd[0] == 'size':
+        print(que.size())
+    elif cmd[0] == 'empty':
+        print(que.empty())
+    elif cmd[0] == 'front':
+        print(que.front())
+    elif cmd[0] == 'back':
+        print(que.back())

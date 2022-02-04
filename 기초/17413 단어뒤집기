@@ -1,0 +1,48 @@
+import sys
+line = sys.stdin.readline().rstrip()
+# line = '<   space   >ecaps ecaps ecaps<    spa   c e>'
+length = len(line)
+idx = 0
+result = ''
+# print(line)
+# print(len(line))
+# print(line[0:1])
+# while (('0' <= line[end] and line[end] <= '9') or ('a' <= line[end]) and line[end] <= 'z'):
+# print(('0' <= ' ' and ' ' <= '9'))
+# print(('a' <= ' ') and ' ' <= 'z')
+# print(int(' '))
+while(True):
+    # print('????????')
+    if idx == len(line):
+        print(result)
+        break
+    else :
+        target = line[idx]
+        # print('target is',target)
+        if target == '<' :
+            end = idx + 1
+            while(line[end] != '>'):
+                end = end +1
+            result = result + line[idx : end + 1]
+            idx = end + 1
+
+        elif target == ' ' :
+            result = result + target
+            idx = idx + 1
+
+        elif target.isdigit() == True or target.isalpha() == True :
+            end = idx + 1
+            # print('first end', end)
+            while((('0' <= line[end] and line[end] <= '9') or ('a' <= line[end]) and line[end] <= 'z')) :
+                # print('end is', end, length, line[end])
+
+                end = end + 1
+                if end == length:
+                    break
+            reverse = line[idx: end  ]
+            # print('reverse is',reverse[::-1])
+            result = result + reverse[::-1]
+            idx = end
+        # print(result)
+
+

@@ -1,0 +1,11 @@
+import sys
+A, B = map(int, sys.stdin.readline().split())
+
+small = min(A,B)
+# print('small is {}'.format(small))
+while(A%small != 0 or B%small != 0):
+    # print(A%small)
+    # print(B%small)
+    small = small - 1
+print(small)
+print((A//small)*(B//small)*small)

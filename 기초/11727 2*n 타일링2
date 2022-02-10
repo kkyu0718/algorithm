@@ -1,0 +1,7 @@
+num = int(input())
+memoization = [1]*(num+1)
+memoization[1] = 1
+# memoization[2] = 3
+for i in range(2, num + 1):
+    memoization[i] = memoization[i-1] + memoization[i-2] * 2
+print(memoization[num]%10007)

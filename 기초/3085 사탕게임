@@ -1,0 +1,72 @@
+import sys
+from collections import Counter
+
+def continuous(line):
+    count = 0
+    prev = -float('inf')
+    target = line[0]
+    prev_list = []
+    for i in range(len(line)):
+        if target == line[i]:
+            count += 1
+        else :
+            prev_list.append(count)
+            count = 1
+            target = line[i]
+    prev_list.append(count)
+    return max(prev_list)
+
+
+
+n = int(sys.stdin.readline().rstrip())
+letters = []
+letters_t = []
+for _ in range(n):
+    letters.append(list(sys.stdin.readline().rstrip()))
+for letter in list(zip(*letters)):
+    letters_t.append(letter)
+letters_t = list(map(list, letters_t))
+
+
+maxnum= -float('inf')
+for i in range(n):
+    for j in range(n-1):
+        temp = letters[i][j+1]
+        letters[i][j+1] = letters[i][j]
+        letters[i][j] = temp
+
+        temp = letters_t[j+1][i]
+        letters_t[j+1][i] = letters_t[j][i]
+        letters_t[j][i] = temp
+
+        maxnum = max(continuous(letters[i]),continuous(letters_t[j]), continuous(letters_t[j+1]), maxnum)
+
+        temp = letters_t[j + 1][i]
+        letters_t[j + 1][i] = letters_t[j][i]
+        letters_t[j][i] = temp
+
+        temp = letters[i][j+1]
+        letters[i][j+1] = letters[i][j]
+        letters[i][j] = temp
+
+for i in range(n):
+    for j in range(n-1):
+        temp = letters_t[i][j+1]
+        letters_t[i][j+1] = letters_t[i][j]
+        letters_t[i][j] = temp
+
+        temp = letters[j + 1][i]
+        letters[j + 1][i] = letters[j][i]
+        letters[j][i] = temp
+
+        maxnum = max(continuous(letters_t[i]),continuous(letters[j]), continuous(letters[j+1]), maxnum)
+
+        temp = letters_t[i][j+1]
+        letters_t[i][j+1] = letters_t[i][j]
+        letters_t[i][j] = temp
+
+        temp = letters[j + 1][i]
+        letters[j + 1][i] = letters[j][i]
+        letters[j][i] = temp
+print(maxnum)
+

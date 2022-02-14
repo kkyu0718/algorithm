@@ -1,0 +1,11 @@
+import sys
+# N = int(sys.stdin.readline().rstrip())
+N = 5
+count = 0
+# print('3' in str(3) + str(39) + str(45))
+for sec in range(60):
+    for min in range(60):
+        for hour in range(N+1):
+            if '3' in str(hour) + str(min) + str(sec):
+                count = count +1
+print(count)

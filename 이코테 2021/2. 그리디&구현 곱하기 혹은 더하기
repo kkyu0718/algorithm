@@ -1,0 +1,10 @@
+# nums = input()
+nums = '567'
+numlist = list(map(int, nums))
+result = 0
+for num in numlist :
+    if num == '0' or num == '1' or result == 0 :
+        result += num
+    else :
+        result = result * num
+print(result)

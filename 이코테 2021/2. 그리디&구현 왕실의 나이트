@@ -1,0 +1,14 @@
+import sys
+loc = 'a1'
+count = 0
+loc = str(loc)
+x, y = ord(loc[0]), int(loc[1])
+print(x, y)
+dx = [1, -1, 2, -2, 1, -1, 2, -2]
+dy = [2, 2, 1, 1 , -2 ,-2 , -1, -1]
+mov = list(zip(dx, dy))
+for m in mov:
+    if (x + m[0] <= ord('h')) & (x + m[0] >= ord('a')) & (y + m[1] >= 1) &( y + m[1] <= 8):
+        print(m)
+        count = count +1
+print(count)

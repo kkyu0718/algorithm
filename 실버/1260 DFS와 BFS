@@ -1,0 +1,45 @@
+import sys
+
+N, M, V = map(int, sys.stdin.readline().split())
+
+visited = [False] * (N+1)
+edge = []
+for i in range(M) :
+    edge.append(sorted(list(map(int,sys.stdin.readline().split()))))
+edge = sorted(edge, key = lambda x: (x[0],x[1]))
+
+# dfs
+stk = []
+def dfs(visited, i):
+    print(i, end = " ")
+    visited[i] = True
+    for e in edge :
+        if i in e:
+            target = list(filter(lambda x: x != i, e))[0]
+            if visited[target] == False :
+                dfs(visited, target)
+
+dfs(visited, V)
+
+print('')
+
+# initialization
+visited = [False] * (N + 1)
+
+# bfs
+from collections import deque
+
+def bfs(start,  visited):
+    queue = deque([start])
+    visited[start] = True
+    while queue:
+        root = queue.popleft()
+        print(root, end = ' ')
+        for e in edge:
+            if root in e:
+                target = list(filter(lambda x: x != root, e))[0]
+                if visited[target] == False:
+                    queue.append(target)
+                    visited[target] = True
+
+bfs(V, visited)

@@ -1,0 +1,26 @@
+import sys
+N, K = map(int, sys.stdin.readline().split())
+lines = []
+
+for _ in range(N):
+    lines.append(int(sys.stdin.readline().rstrip()))
+
+def binarysearch(start, end) :
+    result = 0
+    while(start <= end):
+        mid = (start + end) // 2
+        # print(mid)
+        count = 0
+        for line in lines :
+            count += line // mid
+        # print(count)
+        if count < K :
+            end = mid - 1
+        else :
+            result = max(result,mid)
+            start = mid + 1
+    print(result)
+
+start = 1
+end = max(lines)
+binarysearch(start, end)

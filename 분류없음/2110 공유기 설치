@@ -1,0 +1,28 @@
+import sys
+N, C = map(int, sys.stdin.readline().split())
+houses = []
+
+for _ in range(N):
+    houses.append(int(sys.stdin.readline().rstrip()))
+houses.sort()
+start = 1
+end = max(houses) - min(houses)
+answer = 0
+def binarysearch(start, end):
+    global answer
+    while(start<= end):
+        mid = (start+end) // 2
+        current = houses[0]
+        count = 1
+        for i in range(1, len(houses)):
+            if houses[i] >= current + mid :
+                current = houses[i]
+                count +=1
+
+        if count < C :
+            end = mid -1
+        else:
+            start = mid + 1
+            answer = mid
+    print(answer)
+binarysearch(start, end)

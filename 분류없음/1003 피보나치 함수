@@ -1,0 +1,17 @@
+import sys
+
+T = int(sys.stdin.readline())
+
+
+for i in range (T):
+
+    N = int(sys.stdin.readline())
+    d = [[0,0] for i in range(42)]
+    d[0] = [1, 0]
+    d[1] = [0, 1]
+    for j in range(N-1):
+        d[j+2][0] = d[j][0] + d[j+1][0]
+        d[j+2][1] = d[j][1] + d[j+1][1]
+    print(d[N][0], d[N][1])
+
+

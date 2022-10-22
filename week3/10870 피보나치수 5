@@ -1,0 +1,7 @@
+import sys
+n = int(sys.stdin.readline().rstrip())
+numList = [0, 1]
+for i in range(2, n+1):
+  numList.append(numList[i-1] + numList[i-2])
+
+print(numList[-1] if n>=2 else numList[n])

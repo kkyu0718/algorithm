@@ -1,0 +1,9 @@
+import sys
+result = []
+num = 0
+for i in range(10):
+  outNum, inNum = list(map(int, sys.stdin.readline().rstrip().split(" ")))
+  num = num - outNum + inNum
+  result.append(num)
+
+print(max(result))

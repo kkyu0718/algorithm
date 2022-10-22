@@ -1,0 +1,14 @@
+import sys
+
+N = int(sys.stdin.readline().rstrip())
+for i in range(N):
+  n = int(sys.stdin.readline().rstrip())
+  binaryNum = str(bin(n))[2:]
+  # print(binaryNum)
+  answer = ""
+  for idx, elem in enumerate(binaryNum[::-1]):
+    if(elem == "1"):
+      answer += f" {idx}"
+
+  print(answer.lstrip())
+  

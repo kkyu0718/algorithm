@@ -1,0 +1,14 @@
+import sys
+from itertools import combinations
+numList = []
+for i in range(9) :
+  numList.append(int(sys.stdin.readline().rstrip()))
+for comb in list(combinations(range(9), 7)):
+  combList = []
+  for elem in comb:
+    combList.append(numList[elem])
+
+  if (sum(combList) == 100) :
+    print(*sorted(combList))
+    break
+  

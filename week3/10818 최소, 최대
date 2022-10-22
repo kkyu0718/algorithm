@@ -1,0 +1,4 @@
+import sys
+_ = sys.stdin.readline().rstrip()
+numList = list(map(int, sys.stdin.readline().split(" ")))
+print(min(numList), max(numList))

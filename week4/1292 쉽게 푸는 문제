@@ -1,0 +1,12 @@
+import sys
+
+a, b = map(int, sys.stdin.readline().rstrip().split(" "))
+numList = []
+num = 1
+count = 0
+while(count <= b):
+  for j in range(num):
+    numList.append(num)
+    count+= 1
+  num += 1
+print(sum(numList[a-1:b]))

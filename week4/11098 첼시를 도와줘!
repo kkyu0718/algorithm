@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int M;
+	cin >> M;
+
+	for (int i = 0; i < M; i++) {
+		int N, price;
+		string name;
+		cin >> N;
+		vector<pair<int, string>> v;
+		for (int j = 0; j < N; j++) {
+			cin >> price >> name;
+			v.push_back(pair<int, string> (price, name));
+		}
+		sort(v.begin(), v.end());
+		for (int k = 0; k < v.size(); k++) {
+			//cout << "v 배열은 "<< v[k].first << v[k].second << ' '<< endl;
+		}
+		cout << v[v.size() - 1].second << endl;
+	}
+
+	return 0;
+}

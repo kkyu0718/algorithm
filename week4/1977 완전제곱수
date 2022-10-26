@@ -1,0 +1,27 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int main(){
+	int M,N;
+	cin >> M;
+	cin >> N;
+
+	int min = ceil(pow(M, 0.5));
+	int max = floor(pow(N, 0.5));
+	int sum = 0;
+	
+	if (min > max){
+		cout << -1;
+		return 0;		
+	}
+	
+	for(int i = min; i <= max; i++) {
+		sum += i*i;
+	}
+	
+	cout << sum << endl;
+	cout << min*min << endl;
+	return 0;
+}

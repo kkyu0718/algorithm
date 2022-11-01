@@ -1,0 +1,39 @@
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+
+vector<int> getStarCount(int num) {
+  vector<int> v(2*num);
+  v[0] = 0;
+  int mid = num; // 5
+  for (int i = 1; i < mid; i++ ){
+    v[i] = 2 * (num - i + 1) - 1;    
+  }
+  v[mid] = 1;
+  for (int i = mid + 1; i < 2*num; i++ ){
+    v[i] = 2 * (i - num + 1) - 1;  // 2 * (9-5+1) -1 = 9  
+  }
+  return v;
+}
+
+int main(){
+  int n;
+  cin >> n;
+  vector<int> v = getStarCount(n);
+  for(int i = 1; i < v.size(); i++) {
+    int stars = v[i];
+    int pad = (2*n - 1 - v[i]) / 2;
+    for (int j = 0; j < pad; j++) {
+      cout << " ";
+    }
+    for (int j = 0; j < stars; j++) {
+      cout << "*";
+    }
+    // for (int j = 0; j < pad; j++) {
+    //   cout << " ";
+    // }
+    cout<<'\n';
+  }
+  return 0;
+}

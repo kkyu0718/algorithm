@@ -1,0 +1,57 @@
+#include <string>
+#include <vector>
+using namespace std; 
+#include <unordered_set>
+#include <iostream>
+#include <cmath>
+
+int get_Ns(int N, int idx) { 
+    int sum = 0;
+    for (int i = 0; i < idx; i++) {
+        sum += N * pow(10, i);
+    }
+    return sum; 
+} 
+using namespace std;
+
+int solution(int N, int number) {
+    if (N == number ){
+        return 1;
+    }
+    vector< unordered_set<int> > DP(9); 
+    DP[1].insert(N); // 한개의 N으로 만들 수 있는 수는 N뿐임
+  for (int k = 2; k <= 8; k++) { 
+        
+        // DP[k]에 NNN...(k+1만큼 반복)과 같은 형태 삽입
+        DP[k].insert(get_Ns(N, k));
+        
+        // DP[k]에 사칙 연산의 결과또한 삽입
+        for (int i = 1; i < k; i++) { 
+            int j = k-i;
+            for (int a : DP[i]) { 
+                for (int b : DP[j]) { 
+                    DP[k].insert(a + b); 
+                        // 검사가 필요한 연산들
+                        
+                        // (1) 음수 존재하면 안됨
+                    if (a - b > 0) 
+                        DP[k].insert(a - b); 
+                        
+                    DP[k].insert(a * b);
+                        
+                        // (2) 0 존재하면 안됨
+                    if (a / b > 0) DP[k].insert(a / b); 
+                    } 
+                } 
+            } 
+        
+      //   cout << "DP k " << k << endl;
+      // for (auto d : DP[k]) {
+      //     cout << d << " ";
+      // }
+      // cout << endl;
+        if (DP[k].find(number)!=DP[k].end()) 
+            return k; 
+}
+return -1;
+}

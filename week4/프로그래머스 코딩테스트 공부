@@ -1,0 +1,57 @@
+#include <string>
+#include <vector>
+#include <iostream>
+using namespace std;
+const int INF = 987654321;
+int solution(int alp, int cop, vector<vector<int>> problems) {
+    int dp[170][170];
+    int alpMax = 0; int copMax = 0;
+    for(int i = 0; i < problems.size(); i++ ){
+        if (problems[i][0] > alpMax) {
+            alpMax = problems[i][0];
+        }
+        if (problems[i][1] > copMax){
+            copMax = problems[i][1];
+        }
+    }
+    alp = min(alp, alpMax);
+    cop = min(cop, copMax);
+    for(int i = alp; i < 170; i++){
+        for(int j = cop; j < 170; j++ ){
+            dp[i][j] = INF;
+        }
+    }
+    dp[alp][cop] = 0;
+    
+    
+    for(int i = alp; i <= alpMax; i++){
+        for(int j = cop; j <= copMax; j++ ){
+            if (i+1 <= alpMax){
+                dp[i+1][j] = min(dp[i][j]+1, dp[i+1][j]);
+            }
+            if (j+1 <= copMax) {
+                dp[i][j+1] = min(dp[i][j+1], dp[i][j]+1);
+            }
+            for(int k = 0; k < problems.size(); k++) {
+                vector<int> problem = problems[k];
+                if(i >= problem[0] && j >= problem[1]){
+                    int m, n;     
+                    m = min(i+problem[2], alpMax);
+                    n = min(j + problem[3], copMax);
+                    dp[m][n] = min(dp[m][n], dp[i][j] + problem[4]);
+                    // dp[i+problem[2]][j+problem[3]] = min(dp[i+problem[2]][j+problem[3]], dp[i][j] + problem[4]);
+
+                }
+            }
+        }
+    }
+    for(int i = alp; i <= alpMax; i++){
+        for(int j = cop; j <= copMax; j++ ){
+            cout << dp[i][j] << " ";
+        }
+        cout << endl;
+    }
+    return dp[alpMax][copMax];
+    // int answer = 0;
+    // return answer;
+}

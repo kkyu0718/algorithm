@@ -1,0 +1,59 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <map>
+#include <algorithm>
+#include <iostream>
+using namespace std;
+
+struct Word{
+    string word;
+    int count;
+};
+
+int solution(string begin, string target, vector<string> words) {
+    map<string, int> visited;
+    words.push_back(begin);
+    // map<string, vector<string>> transformMap;
+    for(int i = 0; i < words.size(); i++){
+        visited[words[i]] = 0;
+        // for(int j )
+    }
+    
+    if(find(words.begin(), words.end(), target) == words.end()){
+        return 0;
+    }
+    
+    queue<Word> queue;
+    queue.push({target, 0});
+    
+    while(!queue.empty()){
+        Word a = queue.front();
+        // cout << a.word <<" " << a.count << endl;
+        visited[a.word] = 1;    
+        queue.pop();
+        if(a.word == begin) {
+            return a.count;
+        }
+        // 변경 가능한 word 찾기
+        for(int i = 0; i < words.size(); i++){
+            string b = words[i];
+            if(visited[b] == 0){
+                int count = 0;
+                for(int j = 0; j < a.word.size(); j++) {
+                    if(a.word[j] != b[j]){
+                        count += 1;
+                    }                    
+                }
+                if(count == 1) {
+                    // cout << "push " << b << " " << a.count+1 << endl;
+                    queue.push({b, a.count+1});
+                }
+            }
+        }
+        
+    }
+    
+    // int answer = 0;
+    return 0;
+}

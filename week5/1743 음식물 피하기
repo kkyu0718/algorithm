@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int map[100][100];
+int visit[100][100];
+int N, M, K, row, column, num, r, c;
+vector<int> result;
+int dr[] = {-1, 1, 0, 0};
+int dc[] = {0, 0, -1, 1};
+
+void dfs(int i, int j){
+  // cout << "dfs " << i << " "<< j << endl;
+  visit[i][j] = 1;
+  num += 1;
+  for (int k = 0; k < 4; k++){
+    r = dr[k] + i;
+    c = dc[k] + j;
+    if(r < 0 || r >= N || c < 0 || c >= M) {
+      continue;
+    }
+    if(visit[r][c] == 0 && map[r][c] == 1 ){
+      dfs(r, c);
+    }
+  }
+}
+
+int main() {
+  cin >> N >> M >> K;
+  for (int i = 0; i < K; i++){
+    cin >> row >> column;
+    map[row-1][column-1] = 1;
+  }
+
+  for(int i = 0; i < N; i++) {
+    for(int j = 0; j < M; j++){
+      if(visit[i][j] == 1 || map[i][j] == 0) continue;
+      num = 0;
+      dfs(i,j);
+      result.push_back(num);
+    }
+  }
+  // for(int i=0; i < result.size(); i++ ){
+  //   cout << result[i] << endl;
+  // }
+  cout << *max_element(result.begin(), result.end())<< endl;
+  return 0;
+}

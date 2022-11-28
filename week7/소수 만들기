@@ -1,0 +1,46 @@
+#include <vector>
+#include <iostream>
+#include <cmath>
+using namespace std;
+int sum = 0;
+int answer = 0;
+int visit[50];
+
+void dfs_comb(int idx, int count, int r, vector<int> nums) {
+    if(count == r ){
+        cout << sum << endl;
+        if (sum < 2) return;
+	    int a = (int) sqrt(sum);
+	    for (int i = 2; i <= a; i++) 
+        {
+            if (sum % i == 0){
+                return;
+            } 
+        };
+        cout << "증가" << endl;
+        answer += 1;
+        return;
+    }
+    
+    for (int i = idx; i < nums.size(); i++)
+    {
+        if(visit[i] == 1) continue;
+        // 방문
+        visit[i] = 1;
+        sum += nums[i];
+        // cout << nums[i] << " 더하기 "<< endl;
+        dfs_comb(i, count+1, r, nums);
+        // 방문 x
+        visit[i] = 0;
+        sum -= nums[i];
+        // cout << nums[i] << " 빼기 "<< endl;
+
+    }
+}
+
+int solution(vector<int> nums) {
+    
+    dfs_comb(0,0, 3, nums);
+    
+    return answer;
+}

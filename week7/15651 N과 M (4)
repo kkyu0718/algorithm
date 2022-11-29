@@ -1,0 +1,35 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+int N, M;
+vector<int> result;
+
+void dfs(int idx, int count) {
+  if(count == M) {
+    for (int j = 0; j < result.size(); j++) {
+      cout << result[j] + 1 << " ";
+    }
+    cout << '\n';
+    return;
+  }
+  
+  for (int i = idx; i < N; i ++) {
+    result.push_back(i);
+    dfs(i, count+1);
+    result.pop_back();
+  }
+}
+
+int main(void)
+{
+  cin >> N >> M;
+  vector<int> v;
+  for (int i = 1; i <= N; i++) {
+    v.push_back(i);
+  }
+  
+  dfs(0, 0);
+  return 0;
+  
+}

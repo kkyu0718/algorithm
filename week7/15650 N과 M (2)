@@ -1,0 +1,33 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+int visit [8];
+int N, M;
+vector<int> result;
+
+void dfs(int idx, int count) {
+  if(count == M) {
+    for (int i = 0; i < result.size(); i++) {
+      cout << result[i] << " ";
+    }
+    cout << '\n';
+
+  }
+  for (int i = idx; i <= N; i++) {
+    if(visit[i] == 1 ) continue;
+    visit[i] = 1;
+    result.push_back(i);
+    dfs(i, count+1);
+    visit[i] = 0;
+    result.pop_back();
+  }
+}
+
+int main(void)
+{
+  cin >> N >> M;
+  dfs(1, 0);
+  return 0;
+  
+}

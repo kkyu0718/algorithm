@@ -1,0 +1,76 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+int N, temp;
+vector<int> number;
+vector<int> oper;
+int visit[10];
+int sum = 0;
+int MAX = -1000000000;
+int MIN = 1000000000;
+
+vector<int> result;
+
+int calculate(int num, int oper, int sum) {
+  if (oper == 0) {
+    sum += num;
+  } else if (oper == 1) {
+    sum -= num;
+  } else if (oper == 2) {
+    sum *= num;
+  } else {
+    sum /= num;
+  }
+  return sum;
+}
+int reverseCalculate(int num, int oper, int sum) {
+  if (oper == 0) {
+    sum -= num;
+  } else if (oper == 1) {
+    sum += num;
+  } else if (oper == 2) {
+    sum /= num;
+  } else {
+    sum *= num;
+  }
+  return sum;
+}
+
+void dfs(int count, int sum) {
+  if(count == oper.size()){
+    if(sum > MAX) MAX = sum;
+    if(sum < MIN) MIN = sum;
+    return;
+  }
+
+  for(int i = 0; i < oper.size(); i++){
+    if(visit[i] == 1) continue;
+    visit[i] = 1;
+    dfs(count+1, calculate(number[count+1], oper[i], sum));
+    visit[i] = 0;
+  }
+}
+
+int main(void)
+{
+  cin >> N;
+  for(int i = 0; i < N; i++) {
+    cin >> temp;
+    number.push_back(temp);
+  }
+  
+  for(int i = 0; i < 4; i++) {
+    cin >> temp;
+    for(int j = 0; j < temp; j++) {
+      oper.push_back(i);
+    }
+  }
+  sum = number[0];
+  dfs(0, sum);
+
+  cout << MAX << endl;
+  cout << MIN << endl;
+  return 0;
+}

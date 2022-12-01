@@ -1,0 +1,60 @@
+#include<iostream>
+#include<vector>
+#include<string>
+
+using namespace std;
+string s;
+vector<string> v;
+int main(void)
+{
+  cin >> s;
+  int temp = 1;
+  string elem;
+  int sum = 0;
+  auto iter = s.begin();
+  while(iter != s.end()){
+    // cout << *iter << endl;
+    elem = *iter;
+    if (elem == "(") {
+      temp *= 2;
+      v.push_back(elem);
+    } else if (elem == "[") {
+      temp *= 3;
+      v.push_back(elem);
+    } else if (elem == "]") {
+      if (v.empty() || v.back() != "[") {
+        cout << 0 << endl;
+        return 0;
+      }
+      if (*(iter-1) == '[') {
+        sum += temp;
+        // cout << "add " << temp << endl;
+        }
+      temp /= 3;
+      v.pop_back();
+    } else if (elem == ")"){
+      if (v.empty()|| v.back() != "(") {
+        cout << 0 << endl;
+        return 0;
+      }
+      if(*(iter-1) == '(') {
+        sum += temp;
+        // cout << "add " << temp << endl;
+        }
+      temp /= 2;
+      v.pop_back();
+    } else {
+      cout << 0 << endl;
+      return 0;
+    }
+    iter += 1;
+  }
+  
+  if(v.empty()){
+    cout << sum << endl;
+  } else{
+    cout << 0 << endl;
+  }
+  
+  return 0;
+}

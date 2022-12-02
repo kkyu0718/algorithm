@@ -1,0 +1,61 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<sstream>
+#include<algorithm>
+
+using namespace std;
+
+vector<string> split(string str, char Delimiter){
+  istringstream iss(str);
+  string buffer;
+
+  vector<string> result;
+  while(getline(iss, buffer, Delimiter)){
+    result.push_back(buffer);
+  }
+  return result;
+}
+
+int main(void)
+{
+  string s;
+  getline(cin, s);
+
+  vector<string> result = split(s, ' ');
+  string prefix = result[0];
+
+  for(int i = 1; i< result.size(); i++) {
+    string target = result[i];
+    string answer = "";
+    for(int j = target.size() -1; j>=0; ){
+      if(target[j] == '&'){
+        answer += target[j];
+        j--;
+      }
+      else if (target[j] == ']'){
+        answer += "[]";
+        j -= 2;
+      } 
+      else if (target[j] == '*'){
+        j--;
+        answer += "*";
+      } 
+      else if (target[j] == ',' || target[j] == ';') {
+        j--;
+        continue;
+      }
+      else {
+        answer += " ";
+        string name = "";
+        while(j >= 0) {
+          name = target[j] + name;
+          j--;
+        }
+        answer += name;
+      }
+    }
+    cout << prefix + answer+";" << '\n';
+  }
+  return 0;
+}

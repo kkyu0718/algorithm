@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <utility>
+using namespace std;
+bool cmp (int a, int b){
+  return a > b;
+}
+
+int main(){
+  int T, n, a, e1, e2;
+  cin >> T;
+  for(int i = 0; i < T; i++) {
+    vector<int> v;
+    int result = 0;
+    cin >> n;
+    for(int j = 0; j < n; j++) {
+      cin >> a;
+      v.push_back(a);
+    }
+    while(v.size()!= 1){
+      sort(v.begin(), v.end(), cmp);
+      
+      e1 = v.back();
+      v.pop_back();
+      e2 = v.back();
+      v.pop_back();
+      v.push_back(e1+e2);
+      result += e1+e2;
+      }
+    cout << result << '\n';  
+
+  }
+  return 0;
+}

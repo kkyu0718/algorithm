@@ -1,0 +1,31 @@
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+int main(){
+  int n, a;
+  cin >> n;
+  vector<int> v;
+  int MAX = 0;
+  for(int i = 1; i <= n; i++) {
+    cin >> a;
+    v.push_back(a);
+  }
+  vector<int> answer;
+  answer.push_back(v[0]);
+  MAX = 1;
+  for(int i = 1; i < v.size(); i++) {
+    if(answer.back() < v[i]) {
+      answer.push_back(v[i]);
+      MAX += 1;
+    } else {
+      auto iter = lower_bound(answer.begin(), answer.end(), v[i]);
+      *iter = v[i];
+    }
+  }
+  cout << MAX;
+  return 0;
+}

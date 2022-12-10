@@ -1,0 +1,30 @@
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+int main(){
+  int n, a, b;
+  int MAX = 0;
+  vector<int> v;
+  cin >> n;
+  for(int i = 0; i < n; i++) {
+    cin >> a ;
+    v.push_back(a);
+  }
+  // LIS
+  int dp[n];
+  for(int i = 0; i < v.size(); i++) {
+    dp[i] = 1;
+    for(int j = 0; j < i; j++) {
+      if(v[j] < v[i]) {
+        dp[i] = max(dp[j]+1, dp[i]);
+        MAX = max(MAX, dp[i]);
+      }
+    }
+  }
+  cout << n - MAX;
+  return 0;
+}

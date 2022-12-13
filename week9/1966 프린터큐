@@ -1,0 +1,50 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int t = Integer.parseInt(st.nextToken());
+        for(int i = 0; i < t; i++) {
+            st = new StringTokenizer(br.readLine());
+            int num = Integer.parseInt(st.nextToken());
+
+            LinkedList<int[]> array = new LinkedList<>();
+
+            int target = Integer.parseInt(st.nextToken());
+            st = new StringTokenizer(br.readLine());
+            for(int j = 0; j < num; j++) {
+                int n = Integer.parseInt(st.nextToken());
+                array.add(new int[] {n, j});
+            }
+            int length = array.size();
+            while(!array.isEmpty()) {
+                boolean flag = false;
+                for (int j = 1; j < array.size(); j++) {
+                    if (array.peek()[0] < array.get(j)[0]) {
+                        int[] poped = array.pollFirst();
+                        array.add(poped);
+                        flag = true;
+                        break;
+                    }
+                }
+                if (flag == false) {
+                    int[] poped = array.pollFirst();
+                    if (poped[1] == target) {
+//                        System.out.println(length-array.size());
+                        bw.write(length - array.size() + "");
+                        bw.write("\n");
+                        bw.flush();
+                    }
+                }
+            }
+
+
+        }
+
+        bw.close();
+    }
+}

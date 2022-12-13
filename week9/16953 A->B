@@ -1,0 +1,38 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static long MIN = 1000000000L;
+    static long A = 0L;
+    static long B = 0L;
+    public static void dfs(long cnt, long num) {
+        if(num == B){
+            if(cnt < MIN) {
+                MIN = cnt;
+            }
+            return;
+        }
+        if(num > B) {
+            return;
+        }
+
+        dfs(cnt+1, num * 2);
+        dfs(cnt+1, num*10 + 1);
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        A = Long.parseLong(st.nextToken());
+        B = Long.parseLong(st.nextToken());
+        dfs(1L, A);
+        if(MIN == 1000000000L) {
+            MIN = -1L;
+        };
+        bw.write(MIN+"");
+        bw.close();
+    }
+}

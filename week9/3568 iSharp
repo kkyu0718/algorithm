@@ -1,0 +1,41 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        String prefix = st.nextToken(" ");
+
+        while(st.hasMoreTokens()) {
+            String s = st.nextToken(" ");
+            int idx = 0;
+            bw.write(prefix);
+            for(int i = s.length()-1; i >= 0; i--) {
+                char elem = s.charAt(i);
+                if(elem == '&') {
+                    bw.write("&");
+                } else if (elem == ']') {
+                    bw.write("[]");
+                } else if (elem == '[') {
+                    continue;
+                } else if (elem == '*') {
+                    bw.write("*");
+                } else if (elem == ',' || elem == ';'){
+                    continue;
+                } else {
+                    idx = i;
+                    break;
+                }
+            }
+            bw.write(" "+s.substring(0, idx+1)+";");
+            bw.write("\n");
+            bw.flush();
+        }
+
+        bw.close();
+    }
+}

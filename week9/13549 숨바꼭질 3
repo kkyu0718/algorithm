@@ -1,0 +1,56 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static int N;
+    static int K;
+    static int MAX;
+    static int[] dp = new int[200000+1];
+
+    public static void bfs() {
+        Arrays.fill(dp, MAX);
+        Queue<int[]> q = new LinkedList<>();
+        q.offer(new int[]{N, 0});
+        while(!q.isEmpty()) {
+            int[] poped = q.poll();
+            int pos = poped[0];
+            int time = poped[1];
+//            System.out.println(pos + " "+ time);
+            if(dp[pos] <= time) {
+                continue;
+            } else{
+                dp[pos] = time;
+            }
+            if(pos == K) continue;
+//            if(time > MAX) continue;
+            if(pos-1 >= 0)  q.offer(new int[]{pos-1, time+1});
+            if(pos+1 <= 200000) q.offer(new int[]{pos+1, time+1});
+            if(pos*2 <= 200000) q.offer(new int[]{pos*2, time});
+//            if(q.size() > 30 ) {
+//                return;
+//            }
+        }
+
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        N = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken());
+        MAX = 200000; // 시간 초과시 추가 구현 필요
+        if(N== K) {
+            dp[K] = 0;
+        } else{
+            bfs();
+
+        }
+
+        bw.write(dp[K]+"");
+        bw.flush();
+        bw.close();
+    }
+}

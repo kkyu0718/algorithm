@@ -1,0 +1,46 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+    static int[] nums;
+    static int n;
+    static int answer = 0;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        n = Integer.parseInt(st.nextToken());
+        nums = new int[n];
+
+        dfs(0);
+        bw.write(answer + "");
+        bw.flush();
+        bw.close();
+    }
+
+    private static void dfs(int col) {
+        if(col == n) {
+            answer += 1;
+            return;
+        }
+
+        for(int i = 0; i < n; i++) {
+            nums[col] = i;
+            if(possible(col) == true) {
+                dfs(col+1);
+            }
+        }
+    }
+
+    private static boolean possible (int col) {
+        for(int i = 0; i < col; i++ ){
+            if(nums[col] == nums[i]) return false;
+            if(nums[col] == nums[i] + (col - i)) return false;
+            if(nums[col] == nums[i] - (col - i)) return false;
+        }
+        return true;
+    }
+
+}

@@ -1,8 +1,1 @@
-2022.1 ~
-목표 : 실버는 푸는 수준
-
-2022.2 : 이젠 골드 노립니다
-
-2022.5 : 알고리즘 쉬는 중.. 언젠간 돌아올게요
-
-2022.11 : 진짜 해야돼요
+[![Solved.ac Profile](http://mazassumnida.wtf/api/v2/generate_badge?boj=net605)](https://solved.ac/net605/)

@@ -1,0 +1,74 @@
+class Solution {
+    static boolean[][] map;
+    static boolean[] visit;
+    static int MIN = 500;
+    public int solution(String begin, String target, String[] words) {
+        int answer = 0;
+        int n = words.length;
+        visit = new boolean[n+1];
+        map = new boolean[n+1][n+1];
+        boolean flag = false;
+        for(int i = 0; i < words.length; i++) {
+            if(target.equals(words[i])) {
+                flag = true;
+            };
+        }
+        if (flag == false) return 0;
+        
+        String[] newWords = new String[words.length+1];
+        newWords[0] = begin;
+        for(int i = 0; i < words.length ; i++) {
+            newWords[i+1] = words[i];
+        }
+        
+
+        for(int i = 0; i < newWords.length; i++) {
+            for(int j = i+1; j < newWords.length; j++) {
+                if(check(newWords[i], newWords[j]) == true) {
+                    // 변환 가능하다면
+                    map[i][j] = true;
+                    map[j][i] = true;
+                }
+            }
+        }
+        visit[0] = true;
+        dfs(0, newWords, target);
+        return MIN;
+    }
+    
+    private void dfs(int idx, String[] words, String target) {
+        if(words[idx].equals(target)) {
+            int count = 0;
+            for(int i = 0; i < visit.length; i++) {
+                if(visit[i] == true) {
+                    count += 1;
+                }
+            }
+            count -= 1;
+            if(count < MIN) MIN = count;
+            return;
+        }
+        boolean[] arr = map[idx];
+        for(int i = 0; i < arr.length; i++) {
+            if(arr[i] == true && visit[i] == false) {
+                visit[i] = true;
+                dfs(i, words, target);
+                visit[i] = false;
+            }
+        }
+        return;
+    }
+    
+    private boolean check(String s1, String s2) {
+        int n = s1.length();
+        int count = 0;
+        for(int i = 0; i < n; i++) {
+            if(s1.charAt(i) == s2.charAt(i)) {
+                count += 1;
+            }
+        }
+        if(count == n-1) return true;
+        else return false;
+        
+    }
+}

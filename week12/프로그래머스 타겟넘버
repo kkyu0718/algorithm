@@ -1,0 +1,28 @@
+class Solution {
+    static int sum = 0;
+    static int N;
+    static int answer = 0;
+    
+    public int solution(int[] numbers, int target) {
+        N = numbers.length;
+        dfs(0, numbers, target);
+        return answer;
+    }
+    
+    private void dfs(int cnt, int[] numbers, int target) {
+        if(cnt == N) {
+            if(sum == target) {
+                answer += 1;
+            }
+            return;
+        }
+        
+        sum += numbers[cnt];
+        dfs(cnt+1, numbers, target);
+        sum -= numbers[cnt];
+        
+        sum -= numbers[cnt];
+        dfs(cnt+1, numbers, target);
+        sum += numbers[cnt];
+    }
+}

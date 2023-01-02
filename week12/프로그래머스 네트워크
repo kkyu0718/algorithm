@@ -1,0 +1,24 @@
+static boolean[] visit;
+    
+    public int solution(int n, int[][] computers) {
+        int answer = 0;
+        for(int i = 0; i < n; i++) {
+            if(visit[i] == false) {
+                visit[i] = true;
+                dfs(i, computers);
+                answer += 1;
+            }
+        }
+        return answer;
+    }
+    
+    private void dfs(int n, int[][] computers) {
+        int[] adjs = computers[n];
+        for(int i = 0; i < adjs.length; i++) {
+            if(adjs[i] == 0) continue;
+            if(visit[i] == true) continue;
+            visit[i] = true;
+            dfs(i, computers);
+        }
+        return;
+    }

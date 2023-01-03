@@ -1,0 +1,37 @@
+import java.util.*;
+class Solution {
+    static boolean[] visit;
+    static String[] temp;
+    static String[] answer = {"ZZZ", "ZZZ"};
+    public String[] solution(String[][] tickets) {
+        visit = new boolean[tickets.length];
+        answer = new String[tickets.length+1];
+        temp = new String[tickets.length+1];
+
+        temp[0] = "ICN";
+        answer[0] = "ICN";
+        dfs("ICN", tickets, 1);
+        
+        return answer;
+    }
+    
+    private void dfs(String target, String[][] tickets, int cnt) {
+        if(cnt == tickets.length+1) {
+            String result = Arrays.toString(temp);
+            String answerStr = Arrays.toString(answer);
+            if(answerStr.compareTo(result) > 0) {
+                answer = temp.clone();
+            }
+            return;
+        }
+        for(int i = 0; i < tickets.length; i++) {
+            if(tickets[i][0].equals(target) && visit[i] == false) {
+                visit[i] = true;
+                temp[cnt] = tickets[i][1];
+                dfs(tickets[i][1], tickets, cnt+1);
+                visit[i] = false;
+            }
+        }
+        
+    }
+}

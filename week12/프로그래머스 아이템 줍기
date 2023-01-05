@@ -1,0 +1,67 @@
+import java.util.*;
+class Solution {
+    static int[][] map = new int[1+100][1+100];
+    static boolean[][] visit = new boolean[1+100][1+100];
+    static int MIN = 100* 4;
+    
+    static int[] dx = {1, -1, 0, 0};
+    static int[] dy = {0, 0, 1, -1};
+    public int solution(int[][] rectangle, int characterX, int characterY, int itemX, int itemY) {
+        int answer = 0;
+        for(int i = 0; i < rectangle.length; i++) {
+            int x1 = rectangle[i][0] * 2;
+            int x2 = rectangle[i][2] * 2;
+            int y1 = rectangle[i][1] * 2;
+            int y2 = rectangle[i][3] * 2;
+            
+            for(int x = x1; x <= x2; x++) {
+                for(int y = y1; y <= y2; y++ ){
+                    if(map[x][y] ==2 ) continue;
+                    if(x == x1 || x == x2 || y == y1 || y == y2) {
+                        map[x][y] = 1;
+                    } else {
+                        map[x][y] = 2;
+                    }
+                }
+            }
+            
+        }
+        visit[characterX*2][characterY*2] = true;
+        dfs(characterX*2, characterY*2, itemX * 2, itemY*2, 0);
+        
+        return MIN/2;
+    }
+    
+    private void dfs(int x, int y, int itemX, int itemY, int sum) {
+        if(x == itemX && y == itemY) {
+            if(sum < MIN) {
+                MIN = sum;
+            }
+            return;
+        }
+        for(int i = 0; i < 4; i++) {
+            int movedX = x + dx[i];
+            int movedY = y + dy[i];
+            if(movedX >= 101 || movedX < 0 || movedY >= 101 || movedY < 0) continue;
+            if(map[movedX][movedY] == 1 && visit[movedX][movedY] == false) {
+                visit[movedX][movedY] = true;
+                dfs(movedX, movedY, itemX, itemY, sum + 1);
+                visit[movedX][movedY] = false;
+            }
+        }
+    }
+    
+    private void printMap() {
+        for(int i = 0; i < 20; i++) {
+            for(int j = 0; j < 20; j++) {
+                if(map[i][j] == 1) {
+                    System.out.print(1);
+                } else{
+                    System.out.print(0);
+
+                }
+            }
+            System.out.print("\n");
+        }
+    }
+}

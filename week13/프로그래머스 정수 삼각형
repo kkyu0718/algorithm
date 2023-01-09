@@ -1,0 +1,31 @@
+import java.util.*;
+class Solution {
+    public int solution(int[][] triangle) {
+        int answer = 0;
+        int height = triangle.length;
+        
+        int[][] dp = new int[height][height];
+        for(int i = 0; i < height; i++) {
+            for(int j = 0; j < height; j++) {
+                dp[i][j] = 0;
+            }
+        }
+        
+        dp[0][0] = triangle[0][0];
+        
+        for(int i = 0; i < height-1 ; i++) {
+            int[] pre = dp[i].clone();
+            int[] post = triangle[i+1];
+            for(int j = 0; j <= i; j++) {
+                dp[i+1][j] = Math.max(dp[i+1][j], pre[j] + post[j]);
+                dp[i+1][j+1] = Math.max(dp[i+1][j+1], pre[j] + post[j+1]);
+            }
+            
+        }
+        for(int i = 0; i < height; i++) {
+            // System.out.println(dp[height-1][i]);
+            answer = Math.max(answer, dp[height-1][i]);
+        } 
+        return answer;
+    }
+}

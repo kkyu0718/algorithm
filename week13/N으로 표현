@@ -1,0 +1,41 @@
+import java.util.*;
+class Solution {
+    
+    public int solution(int N, int number) {
+        int answer = 0;
+        List<Set<Integer>> lst = new ArrayList<>();
+        
+        for(int i = 0; i < 9; i++) {
+            lst.add(new HashSet<>());
+        }
+        lst.get(1).add(N);
+        
+        if(number == N) return 1;
+        
+        for(int i = 2; i < 9; i++) {
+            Set<Integer> countSet = lst.get(i);
+            for(int j = 1; j <= i; j++) {
+                Set<Integer> preSet = lst.get(j);
+                Set<Integer> postSet = lst.get(i-j);
+                
+                for(int preNum: preSet) {
+                    for(int postNum: postSet) {
+                        countSet.add(preNum+postNum);
+                        countSet.add(preNum-postNum);
+                        countSet.add(preNum*postNum);
+                        if(preNum != 0 && postNum != 0) {
+                            countSet.add(preNum/postNum);
+                        }
+                    }
+                }
+                countSet.add(Integer.parseInt(String.valueOf(N).repeat(i)));
+            }
+        }
+        
+        for(Set<Integer> sub: lst) {
+            if(sub.contains(number)) return lst.indexOf(sub);
+        }
+        
+        return -1;
+    }
+}

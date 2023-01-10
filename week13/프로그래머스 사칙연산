@@ -1,0 +1,85 @@
+class Solution {
+        static int[] nums;
+        static String[] opers;
+        static int[][][] dp;
+
+        public int solution(String arr[]) {
+            int answer = -1;
+
+            int n = arr.length/2;
+            nums = new int[n+1];
+            opers = new String[n];
+
+            dp = new int[2][101][101];
+            for(int i = 0; i < n+1; i ++) {
+                for(int j = 0; j < n+1; j++) {
+                    dp[0][i][j] = Integer.MIN_VALUE;
+                    dp[1][i][j] = Integer.MAX_VALUE;
+                }
+            }
+
+            for(int i = 0; i < arr.length; i++) {
+                if(i%2 == 0) {
+                    nums[i/2] = Integer.parseInt(arr[i]);
+                } else{
+                    opers[i/2] = arr[i];
+                }
+            }
+//             System.out.println(opers[3]);
+
+            // 0 3
+            return calculate(0, 0, n);
+        }
+
+        // flag : 0 최대
+        // flag : 1 최소
+        public int calculate(int flag, int start, int end) {
+            if(start == end) {
+                dp[flag][start][end] = nums[start];
+                return nums[start];
+            }
+
+            if (visited(flag, start, end)) {
+                return dp[flag][start][end];
+            }
+
+
+           // dp[flag][start][end] = 0;
+
+            int result = flag == 0 ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+
+            if (flag == 0) {
+            for (int mid = start; mid < end; mid++) {
+                if (opers[mid].equals("-")) {
+                    // a - b가 최댓값이 되는 조건 -> a는 최댓값, b는 최솟값
+                    result = Math.max(result, calculate(0, start, mid) - calculate(1, mid + 1, end));
+                    continue;
+                }
+                // a + b가 최댓값이 되는 조건 -> a, b 둘 다 최댓값
+                result = Math.max(result, calculate(0, start, mid) + calculate(0, mid + 1, end));
+            }
+        }
+
+        // 최솟값을 구해야할 때 flag = 1
+        if (flag == 1) {
+            for (int mid = start; mid < end; mid++) {
+                if (opers[mid].equals("-")) {
+                    // -(a - b)가 최댓값이 되는 조건 -> a는 최솟값, b는 최댓값
+                    result = Math.min(result, calculate(1, start, mid) - calculate(0, mid + 1, end));
+                    continue;
+                }
+                // -(a + b)가 최댓값이 되는 조건 -> a, b, 둘 다 최솟값
+                result = Math.min(result, calculate(1, start, mid) + calculate(1, mid + 1, end));
+            }
+        }
+            dp[flag][start][end] = result;
+            return dp[flag][start][end];
+        }
+    
+        public boolean visited(int flag, int start, int end) {
+        // 현재값이 초기값과 동일하지 않으면 이미 방문한 경우임
+        // flag = 0일 때는 초기값이 Integer.MIN_VALUE;
+        // flag = 1일 때는 초기값이 Integer.MAX_VALUE;
+        return dp[flag][start][end] != Integer.MIN_VALUE && dp[flag][start][end] != Integer.MAX_VALUE;
+        }
+    }

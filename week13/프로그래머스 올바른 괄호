@@ -1,0 +1,24 @@
+import java.util.*;
+class Solution {
+    boolean solution(String s) {
+        boolean answer = true;
+        
+        Stack<Character> stk = new Stack<>();
+
+        for(int i = 0; i < s.length(); i++) {
+            char e = s.charAt(i);
+            
+            if(e == '(') {
+                stk.push(e);
+            } else { // )
+                if(stk.size() != 0) {
+                    stk.pop();
+                } else{
+                    return false;
+                }
+            }
+        }
+        if(stk.size() != 0) return false;
+        return answer;
+    }
+}

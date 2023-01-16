@@ -1,0 +1,33 @@
+import java.util.*;
+class Solution {
+    public int[] solution(int[] progresses, int[] speeds) {
+        List<Integer> lst = new ArrayList<>();
+
+        Queue<Integer> q = new LinkedList<>();
+        int n = progresses.length;
+        
+        for(int i = 0; i < n; i++) {
+            q.offer((int) Math.ceil((100.0 - progresses[i])/speeds[i]));
+        }
+        
+        int count = 1;
+        int day = q.poll();
+        
+        while(!q.isEmpty()) {
+            int curr = q.poll();
+            
+            if(curr > day) { // 늦게
+                lst.add(count);
+                count = 1;
+                day = curr;
+            } else {
+                count += 1;
+            }
+        }
+        if(count != 0) {
+            lst.add(count);
+        }
+        
+        return  lst.stream().mapToInt(Integer::intValue).toArray();
+    }
+}

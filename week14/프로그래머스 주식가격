@@ -1,0 +1,37 @@
+import java.util.*;
+
+class Solution {
+    private class P {
+        private int price;
+        private int idx;
+        
+        P (int price, int idx) {
+            this.price = price;
+            this.idx = idx;
+        }
+    }
+    
+    public int[] solution(int[] prices) {
+        int[] answer = new int[prices.length];
+        
+        Stack<P> stk = new Stack<>(); // idx 만 저장
+        
+        for(int i = 0; i < prices.length; i++) {
+            P p = new P(prices[i], i);
+            while(!stk.isEmpty() && (stk.peek().price > prices[i])) {
+                int j = stk.pop().idx;
+                answer[j] = i - j;
+            }
+            
+            stk.push(p);
+        }
+        
+        while(!stk.isEmpty()) {
+            int i = stk.pop().idx;
+            answer[i] = prices.length - 1 - i;
+        }
+        
+        
+        return answer;
+    }
+}

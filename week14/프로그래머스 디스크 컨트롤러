@@ -1,0 +1,40 @@
+import java.util.*;
+
+class Solution {
+    public int solution(int[][] jobs) {
+        Arrays.sort(jobs, (o1, o2) -> o1[0] > o2[0] ? 1 : -1);
+        // System.out.println(jobs[0][0]);
+        PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> {
+            return o1[1] > o2[1] ? 1 : -1;
+        });
+        
+        int end = 0;
+        int count = 0;
+        int idx = 0;
+        int total = 0;
+        
+        while(count != jobs.length) {
+            // System.out.println("end " + end);
+            // 가능한 것 pq 에 집어넣기. pq의 원소는 소요시간
+            while(idx < jobs.length && jobs[idx][0] <= end) {
+                pq.offer(jobs[idx]);
+                // System.out.println("offer " + jobs[idx][0] + " " + jobs[idx][1]);
+                idx ++;
+            }
+            
+            // end 업데이트
+            if(!pq.isEmpty()) {
+                int[] polled = pq.poll();
+                total += end + polled[1] - polled[0];
+                // System.out.println("total plus "+ (end + polled[1] - polled[0]));
+                end += polled[1];
+                count ++;
+            }
+            else {
+                end = jobs[idx][0];
+            }
+        }
+        
+        return total/jobs.length;
+    }
+}

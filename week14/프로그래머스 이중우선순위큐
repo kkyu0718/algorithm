@@ -1,0 +1,48 @@
+import java.util.*;
+
+class Solution {
+    public int[] solution(String[] operations) {
+        int[] answer = {};
+        
+        PriorityQueue<Integer> pqMax = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> pqMin = new PriorityQueue<>();
+        int n = operations.length;   
+        
+        for(int i = 0; i < n; i++) {
+            String oper = operations[i].split(" ")[0];
+            int num = Integer.parseInt(operations[i].split(" ")[1]);
+            
+            if(oper.equals("I")) {
+                pqMax.add(num);
+                pqMin.add(num);
+            }
+            if(oper.equals("D") && num == 1) {
+                //최대
+                if(pqMax.size() == 0) continue;
+                int polled = pqMax.poll();
+                pqMin.remove(polled);
+            }
+            if(oper.equals("D") && num == -1) {
+                //최소
+                if(pqMax.size() == 0) continue;
+                int polled = pqMin.poll();
+                pqMax.remove(polled);
+            }
+        }
+        
+        // for(int e: pqMax) {
+        //     System.out.println(e);
+        // }
+        // for(int e: pqMin) {
+        //     System.out.println(e);
+        // }
+        if(pqMax.size() == 0) {
+            answer = new int[] {0,0};
+        } else{
+            int max = pqMax.peek();
+            int min = pqMin.peek();
+            answer = new int[] {max, min};
+        }
+        return answer;
+    }
+}

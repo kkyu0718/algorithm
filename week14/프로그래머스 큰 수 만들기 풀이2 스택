@@ -1,0 +1,28 @@
+import java.util.*;
+
+class Solution {
+    public String solution(String number, int k) {
+        String answer = "";
+        Stack<Integer> stk = new Stack<>();
+        int n = number.length();
+        
+        for(int i = 0; i < n; i++) {
+            int e = number.charAt(i)  - '0';
+            while(!stk.isEmpty() && stk.peek() < e && k > 0){
+                stk.pop();
+                k--;
+            }
+            stk.push(e);
+        }
+        
+        while(k > 0){
+            stk.pop();
+            k--;
+        }
+        
+        for(int i = 0; i < stk.size(); i++) {
+            answer += Integer.toString(stk.get(i));
+        }
+        return answer;
+    }
+}

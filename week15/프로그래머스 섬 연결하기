@@ -1,0 +1,43 @@
+import java.util.*;
+class Solution {
+    static int[] parent;
+    
+    // 최소 비용이 아니기 위해서는 cycle 이 생기면 안된다 -> kruskal algorithm, 합집합
+    public int solution(int n, int[][] costs) {
+        int answer = 0;
+        
+        // 부모 array 초기화
+        // 번호 낮은 것이 부모가 되도록
+        parent = new int[n];
+        for(int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+        
+        // costs 낮은 순 정렬
+        Arrays.sort(costs, (o1, o2) -> o1[2] - o2[2]);
+        
+        for(int i = 0; i < costs.length; i++) {
+            if(findParent(costs[i][0]) == findParent(costs[i][1])) continue;
+            // 부모가 다르다면 union
+            union(costs[i][0], costs[i][1]);
+            answer += costs[i][2];
+        }
+        return answer;
+    }
+    
+    private int findParent(int node) {
+        if(parent[node] == node) return node;
+        return findParent(parent[node]);
+    }
+    
+    private void union(int x, int y) {
+        x = findParent(x);
+        y = findParent(y);
+
+        if(x < y) {
+            parent[y] = x;
+        } else{
+            parent[x] = y;
+        }
+    }
+}

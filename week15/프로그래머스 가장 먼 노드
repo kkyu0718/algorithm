@@ -1,0 +1,51 @@
+import java.util.*;
+class Solution {
+    static boolean[] visit;
+    static int[] count;
+    static int MAX;
+    
+    public int solution(int n, int[][] edge) {
+        // adj 초기 설정        
+        int answer = 0;
+        visit = new boolean[n+1];
+        count = new int[n+1];
+                
+        // bfs
+        bfs(1, edge);
+        
+        for(int i = 0 ;i < count.length; i++ ){
+            if(count[i] == MAX){
+                answer+=1;
+            }
+        }
+        
+        return answer;
+    }
+    
+    private void bfs(int node, int[][] edge) {
+        Queue<int[]> q = new LinkedList<>();
+        q.offer(new int[]{node, 0});
+        visit[node] = true;
+        
+        while(!q.isEmpty()) {
+            int[] e = q.poll();
+            int start = e[0];
+            int c = e[1];
+            MAX = Math.max(c, MAX);
+            
+            for(int i = 0; i < edge.length; i++) {
+                if(edge[i][0] == start && visit[edge[i][1]] == false) {
+                    q.offer(new int[]{edge[i][1], c+1});
+                    visit[edge[i][1]] = true;
+                    count[edge[i][1]] = c+1;
+                }
+                else if (edge[i][1] == start && visit[edge[i][0]] == false) {
+                    q.offer(new int[]{edge[i][0], c+1});
+                    visit[edge[i][0]] = true;
+                    count[edge[i][0]] = c+1;
+                }
+            }
+        }
+        
+    }
+}

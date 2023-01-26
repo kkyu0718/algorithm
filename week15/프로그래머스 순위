@@ -1,0 +1,51 @@
+import java.util.*;
+class Solution {
+    public int solution(int n, int[][] results) {
+        int answer = 0;
+        int[][] map = new int[n+1][n+1];
+        
+        // 플루이드 워샬 알고리즘
+        for(int i = 1; i <= n; i++) {
+            for(int j = 1; j <= n; j++) {
+                if(i==j) map[i][j] = 0;
+                else map[i][j] = 0;
+            }
+        }
+        
+        
+        
+        for(int i = 0; i < results.length; i++) {
+            map[results[i][0]][results[i][1]] = 1;
+        }
+        
+//         for(int i = 1; i <= n; i++) {
+//             for(int j = 1; j <= n; j++){
+//                 System.out.print(map[i][j] + " ");
+//             }
+//             System.out.println();
+//         }
+        
+        for(int k = 1; k <= n; k++) {
+            for(int i = 1; i <= n; i++) {
+                for(int j = 1; j <= n; j++) {
+                    if(map[i][k] == 1 && map[k][j] == 1) {
+                        map[i][j] = 1;
+                    }
+                    // map[i][j] = Math.min(map[i][j], map[i][k] + map[k][j]);
+                }
+            }
+        }
+        
+        for(int i = 1; i <= n; i++) {
+            int count = 0;
+            for(int j = 1; j <= n; j++){
+                System.out.print(map[i][j] + " ");
+                if(map[i][j] == 1 || map[j][i] == 1) count += 1;
+            }
+            System.out.println();
+            if(count == n-1) answer+=1;
+        }
+        
+        return answer;
+    }
+}

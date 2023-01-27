@@ -1,0 +1,50 @@
+import java.util.*;
+
+class Solution {
+    static boolean[] visit;
+    static Set<Integer> lst = new HashSet();
+    static int answer = 0;
+    
+    public int solution(String numbers) {
+        String[] arr = new String[numbers.length()];
+        for(int i = 0; i < numbers.length(); i++) {
+            arr[i] = Character.toString(numbers.charAt(i));
+        }
+        
+        visit = new boolean[numbers.length()];
+        
+        dfs(0, "", numbers.length(), arr);
+        for(int i: lst) {
+            System.out.println(i);
+            if(isPrime(i)) answer+=1;
+        }
+        return answer;
+    }
+    
+    private void dfs(int count, String s, int end, String[] arr) {
+        // 종료 조건
+        if(count >= 1) {
+            // 소수 인지 확인
+            lst.add(Integer.parseInt(s));
+        }
+        if(count == end) {
+            return;
+        }
+        
+        for(int i = 0; i < end; i++) {
+            if(visit[i] == true) continue;
+            visit[i] = true;
+            dfs(count+1, s + arr[i], end, arr);
+            visit[i] = false;            
+        }
+    }
+    
+    private boolean isPrime(int num) {
+        if(num == 1 || num == 0) return false;
+        if(num == 2) return true;
+        for(int i = 2; i <= (int)Math.sqrt(num); i++) {
+            if(num % i == 0) return false;
+        }
+        return true;
+    }
+}

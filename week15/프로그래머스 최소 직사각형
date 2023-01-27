@@ -1,0 +1,24 @@
+import java.util.*;
+
+class Solution {
+    public int solution(int[][] sizes) {
+        int answer = 0;
+        int max = 0;
+        int min = 0;
+        for(int i = 0; i < sizes.length; i++) {
+            int a = sizes[i][0];
+            int b = sizes[i][1];
+            
+            if(a > b) {
+                max = Math.max(a, max);
+                min = Math.max(b, min);
+            } else {
+                max = Math.max(b, max);
+                min = Math.max(a, min);
+            }
+            
+        }
+        
+        return max*min;
+    }
+}

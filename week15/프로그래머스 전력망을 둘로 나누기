@@ -1,0 +1,35 @@
+import java.util.*;
+class Solution {
+    public int solution(int n, int[][] wires) {
+        int answer = Integer.MAX_VALUE;
+        for(int j = 0; j < wires.length; j++) {
+            boolean[][] adj = new boolean[n+1][n+1];
+            boolean[] visit = new boolean[n+1];
+        
+            for(int i = 0; i < wires.length ; i++) {
+                if(i == j) continue;
+                adj[wires[i][0]][wires[i][1]] = true;
+                adj[wires[i][1]][wires[i][0]] = true;
+            }
+
+            Queue<Integer> q = new LinkedList<>();
+            visit[1] = true;
+            q.offer(1);
+            int count = 1;
+
+            // bfs
+            while(!q.isEmpty()) {
+                int e = q.poll();
+                for(int i = 1; i <= n; i++) {
+                    if(adj[e][i] == true && visit[i] == false) {
+                        visit[i] = true;
+                        q.offer(i);
+                        count += 1;
+                    }
+                }
+            }
+            answer = Math.min(answer, Math.abs(count - (n-count)));
+        }
+        return answer;
+    }
+}

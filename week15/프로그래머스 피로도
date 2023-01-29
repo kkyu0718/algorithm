@@ -1,0 +1,34 @@
+class Solution {
+    static boolean[] visit;
+    static int answer = 0;
+    
+    private void dfs(int sum, int count, int[][] dungeons){
+        // 종료 조건
+        // if(sum <= 0) {
+        //     answer = Math.max(answer, count);
+        //     return;
+        // }
+        if(count == visit.length) {
+            answer = Math.max(answer, count);
+            return;
+        }
+        // dfs
+        for(int i = 0 ; i < dungeons.length; i++) {
+            if(visit[i] == true) continue;
+            if(sum >= dungeons[i][0]) {
+                visit[i] = true;
+                dfs(sum - dungeons[i][1], count+1, dungeons);
+            }
+            visit[i] = false;
+            
+        }
+        answer = Math.max(answer, count);
+    }
+    
+    public int solution(int k, int[][] dungeons) {
+        
+        visit = new boolean[dungeons.length];
+        dfs(k, 0, dungeons);
+        return answer;
+    }
+}

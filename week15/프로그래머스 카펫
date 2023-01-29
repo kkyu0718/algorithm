@@ -1,0 +1,21 @@
+import java.util.*;
+class Solution {
+    public int[] solution(int brown, int yellow) {
+        int[] answer = {};
+        int sum = brown + yellow;
+        
+        for(int i = 1; i <= (int)Math.sqrt(sum); i++) {
+            // 가로 >= 세로
+            if(sum % i != 0) continue;
+            int width = sum / i;
+            int height = sum / width;
+            
+            if(width * 2 + height * 2 - 4 == brown && (width - 2) * (height - 2) == yellow){
+                answer = new int[] {width, height};
+                break;
+            }
+        }
+        
+        return answer;
+    }
+}

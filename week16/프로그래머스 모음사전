@@ -1,0 +1,15 @@
+class Solution {
+    public int solution(String word) {
+        int answer = word.length();
+        int[] arr = new int[] {781, 156, 31, 6, 1};
+        String carr = "AEIOU";
+        
+        for(int i = 0; i < word.length(); i++) {
+            Character s = word.charAt(i);
+            int j = carr.indexOf(s);
+            answer += j* arr[i];
+        }
+        
+        return answer;
+    }
+}

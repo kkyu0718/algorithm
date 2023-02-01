@@ -1,0 +1,91 @@
+class Solution {
+    static int[][][] dp;
+    static int[] num;
+    static String[] oper;
+    
+    public int solution(String arr[]) {
+        int answer = -1;
+        num = new int[arr.length/2 + 1];
+        oper = new String[arr.length/2];
+        
+        for(int i = 0; i < arr.length; i++) {
+            if(i%2 == 0) { // 숫자
+                num[i/2] = Integer.parseInt(arr[i]);
+            } else{// 기호
+                oper[i/2] = arr[i];
+            }
+        }
+        
+        dp = new int[2][num.length][num.length];
+        
+        init(); // dp 초기화
+        // System.out.println(num.length);
+        dfs(0, num.length-1, 1);
+        // print();
+        return dp[1][0][num.length-1];
+    }
+    
+    private void init() {
+        for(int i = 0; i < 2; i++) {
+            for(int j = 0; j < num.length; j++) {
+                for(int k = 0; k < num.length; k++) {
+                    if(i == 0) dp[i][j][k] = Integer.MAX_VALUE;
+                    else dp[i][j][k] = Integer.MIN_VALUE;
+                }
+            }
+        }
+    }
+    
+    private void print() {
+        for(int i = 0; i < 2; i++) {
+            for(int j = 0; j < num.length; j++) {
+                for(int k = 0; k < num.length; k++) {
+                    System.out.print(dp[i][j][k] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println();
+        }
+    }
+    
+    
+    private int dfs(int start, int end, int flag) {
+        // 이미 방문했는지 확인
+        if(flag == 0 && dp[0][start][end] != Integer.MAX_VALUE) {
+            // System.out.println("??");
+            return dp[flag][start][end];
+        }
+        if(flag == 1 && dp[1][start][end] != Integer.MIN_VALUE) {
+            return dp[flag][start][end];
+        }
+        int result;
+        
+        if(start == end) {
+            dp[0][start][end] = num[start];
+            dp[1][start][end] = num[start];
+        } else{
+            // flag = 0 최소 , flag = 1 최대
+            for(int i = start; i < end; i++) {
+                // - + 판별
+                if(flag == 0 && oper[i].equals("+")) {
+                    // 최소 + 최소
+                    dp[flag][start][end] = Math.min(dp[flag][start][end], dfs(start, i, 0)+dfs(i+1, end, 0));
+                }
+                if(flag == 0 && oper[i].equals("-")) {
+                    // 최소 - 최대
+                    dp[flag][start][end] = Math.min(dp[flag][start][end], dfs(start, i, 0)-dfs(i+1, end, 1));
+                }
+                if(flag == 1 && oper[i].equals("+")) {
+                    // 최대 + 최대
+                    dp[flag][start][end] = Math.max(dp[flag][start][end], dfs(start, i, 1)+dfs(i+1, end, 1));
+                }
+                if(flag == 1 && oper[i].equals("-")) {
+                    // 최대 - 최소
+                    dp[flag][start][end] = Math.max(dp[flag][start][end], dfs(start, i, 1)-dfs(i+1, end, 0));
+                }
+            }
+        }
+        result = dp[flag][start][end];
+        return result;
+    }
+}

@@ -1,0 +1,77 @@
+import java.io.*;
+import java.util.*;
+public class Main {
+
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        long answer = 0;
+        int V = Integer.parseInt(st.nextToken());
+        int E = Integer.parseInt(st.nextToken());
+
+        int[][] arr = new int[E][3];
+
+        for(int i = 0; i < E; i++) {
+            st = new StringTokenizer(br.readLine());
+            arr[i][0] = Integer.parseInt(st.nextToken());
+            arr[i][1] = Integer.parseInt(st.nextToken());
+            arr[i][2] = Integer.parseInt(st.nextToken());
+        }
+
+        Arrays.sort(arr, (o1, o2) -> o1[2] - o2[2]);
+
+        // union find 초기화
+        int[] parents = new int[V+1];
+        for(int i = 0; i < parents.length; i++) {
+            parents[i] = i;
+        }
+
+        for(int i = 0; i < E; i++) {
+//            if(arr[i][2] < 0) {//음수 가중치이면 무조건 추가
+//                answer += arr[i][2];
+//                union(arr[i][0], arr[i][1], parents);
+//                continue;
+//            }
+
+//            System.out.println(" a b parent " + findParent(arr[i][0], parents) + " " + findParent(arr[i][1], parents));
+
+            // kruskal
+            if(findParent(arr[i][0], parents) != findParent(arr[i][1], parents)) {
+                union(arr[i][0], arr[i][1], parents);
+                answer += arr[i][2];
+            }
+        }
+//        print(parents);
+        bw.write(answer + "");
+
+        bw.flush();
+        bw.close();
+    }
+
+    public static int findParent(int node, int[] parents) {
+        if(parents[node] == node) {
+            return node;
+        }
+        return findParent(parents[node], parents);
+    }
+
+    public static void union(int a, int b, int[] parents) {
+        a = findParent(a, parents);
+        b = findParent(b, parents);
+        if(a < b) { // a를 부모로 설정
+            parents[b] = a;
+        } else{
+            parents[a] = b;
+        }
+//        System.out.println(" a b union " + a + " " + b);
+    }
+
+    public static void print(int[] arr) {
+        for(int i = 0; i < arr.length; i++) {
+            System.out.println(arr[i]);
+        }
+    }
+}

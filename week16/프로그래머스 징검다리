@@ -1,0 +1,35 @@
+import java.util.*;
+
+class Solution {
+    public int solution(int distance, int[] rocks, int n) {
+        int answer = 0;
+        int left = 0;
+        int right = distance;
+        Arrays.sort(rocks);
+        while(left <= right) {
+            int mid = (left + right)/2;
+            int prev = 0;
+            int cnt = 0;
+            
+            for(int i = 0; i < rocks.length; i++) {
+                if(rocks[i] - prev < mid) {
+                    cnt++;
+                } else {
+                    prev = rocks[i];;
+                }
+            }
+            if(distance - rocks[rocks.length-1] < mid) {
+                cnt++;
+            } 
+            // cnt(제거)를 적게 해야(mid가 작아야) 지점 사이의 거리의 최솟값이 가장 커진다
+            if(cnt > n){
+                right = mid - 1;
+            } else {
+                answer = mid;
+                left = mid + 1;
+            }
+        }
+        
+        return answer;
+    }
+}

@@ -1,0 +1,68 @@
+class Solution {
+    static int[][] map;
+    public int[] solution(int rows, int columns, int[][] queries) {
+        int[] answer = new int[queries.length];
+        map = new int[rows][columns];
+        int num = 1;
+        
+        // 행렬 초기화
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                map[i][j] = num;
+                num += 1;
+            }
+        }
+        
+        for(int i = 0; i < queries.length; i++) {
+            int add = rotate(queries[i][0]-1, queries[i][1]-1, queries[i][2]-1, queries[i][3]-1);
+            answer[i] = add;
+            // print(map);            
+        }
+        
+        return answer;
+    }
+    
+    private void print(int[][] matrix) {
+        for(int i = 0; i < matrix.length; i++) {
+            for(int j = 0; j < matrix[0].length; j++) {
+                System.out.print(matrix[i][j]+ " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+    
+    private int rotate(int r1, int c1, int r2, int c2) {
+        int temp = map[r1][c2];
+        int num = Integer.MAX_VALUE;
+        num = Math.min(num, map[r1][c2]);
+        
+        // 1번 
+        for(int j = c2; j >= c1+1; j-- ) {
+            num = Math.min(num, map[r1][j]);
+            map[r1][j] = map[r1][j-1];
+        }
+        
+        // 2번 
+        for(int i = r1; i <= r2-1; i++ ) {
+            num = Math.min(num, map[i][c1]);
+            map[i][c1] = map[i+1][c1];
+        }
+        
+        // 3번 
+        for(int j = c1; j <= c2-1; j++ ) {
+            num = Math.min(num, map[r2][j]);
+            map[r2][j] = map[r2][j+1];
+        }
+        
+        // 4번 
+        for(int i = r2; i >= r1+1; i-- ) {
+            num = Math.min(num, map[i][c2]);
+            map[i][c2] = map[i-1][c2];
+        }
+        
+        map[r1+1][c2] = temp;
+        
+        return num;
+    }
+}

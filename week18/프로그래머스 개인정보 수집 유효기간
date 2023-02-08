@@ -1,0 +1,46 @@
+// 1:18
+import java.util.*;
+
+class Solution {
+    HashMap<String,Integer> termMap;
+    
+    public int[] solution(String today, String[] terms, String[] privacies) {
+        List<Integer> answer = new ArrayList<>();
+        termMap = new HashMap<>();
+        
+        String[] t = today.split("[.]");
+        int cnt1 = Integer.parseInt(t[0]) * 12 * 28 + Integer.parseInt(t[1]) * 28 + Integer.parseInt(t[2]);
+        
+        // terms hashmap 으로 만들기
+        for(int i = 0; i < terms.length; i++) {
+            String term = terms[i].split(" ")[0];
+            int n = Integer.parseInt(terms[i].split(" ")[1]);
+            termMap.put(term, n);
+        }
+        
+        for(int i = 0; i < privacies.length; i++ ){
+            String[] s = privacies[i].split(" ");
+            String[] dates = s[0].split("\\.");
+            int year = Integer.parseInt(dates[0]);
+            int month = Integer.parseInt(dates[1]);
+            int day = Integer.parseInt(dates[2]);
+            
+            String term = privacies[i].split(" ")[1];
+            int n = termMap.get(term);
+            
+            int cnt2 = calculateDate(year, month, day, n);
+            
+            if(cnt2 <= cnt1) {
+                answer.add(i+1);
+            }
+        }
+        
+        return answer.stream().mapToInt(Integer::intValue).toArray();
+        // return ans;
+    }
+    
+    private int calculateDate(int year, int month, int day, int n) {
+        month += n;
+        return year * 28 * 12 + month * 28 + day;
+    }
+}

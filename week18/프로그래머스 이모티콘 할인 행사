@@ -1,0 +1,76 @@
+import java.util.*;
+class Solution {
+    static int[] discounts = new int[] {10, 20, 30, 40};
+    static int maxUser = 0;
+    static int maxEarn = 0;
+    
+    private void print(int[] array) {
+        for(int i = 0; i < array.length; i++) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.println();
+    }
+    
+    // 중복 , 순열
+    private void dfs (int count, int[] emoticons, int[] saves, int[][] users) {
+        // 중단
+        if(count == emoticons.length) {
+            // 확인
+            // print(saves);
+            int[] result = check(saves, emoticons, users);
+            int user = result[0];
+            int earn = result[1];
+            // System.out.println("user " + user);
+            // System.out.println("earn " + earn);
+            // System.out.println();
+            if(maxUser == user) {                
+                maxEarn = Math.max(maxEarn, earn);
+            }
+            else if(maxUser < user) {
+                maxEarn = earn;
+                maxUser = user;
+            }
+            return;
+        }
+        
+        for(int i = 0; i < discounts.length; i++) {
+            saves[count] = discounts[i];
+            dfs(count + 1, emoticons, saves, users);
+        }      
+    }
+    
+    private int[] check(int[] saves, int[] emoticons, int[][] users) {
+        int user = 0;
+        int earn = 0;
+        for(int i = 0; i < users.length; i++) {
+            int discountLimit = users[i][0];
+            int buyLimit = users[i][1];
+            int userPay = 0;
+            
+            for(int j = 0; j < emoticons.length; j++) {
+                if(discountLimit > saves[j]) continue;
+                int emoticonPrice = emoticons[j] * (100-saves[j]) / 100;
+                // System.out.println("user " + i + " pay " + emoticonPrice);
+                userPay += emoticonPrice;
+                // earn += emoticons[j] - emoticonPrice;
+            }
+            
+            if(userPay >= buyLimit) {
+                // 신규 가입자
+                user += 1;                
+            } 
+            else {
+                earn += userPay;
+            }
+        }
+        return new int[] {user, earn};
+    }
+    
+    public int[] solution(int[][] users, int[] emoticons) {
+        int[] saves = new int[emoticons.length];
+        
+        Arrays.sort(emoticons);
+        dfs(0, emoticons, saves, users);
+        return new int[]{maxUser, maxEarn};
+    }
+}

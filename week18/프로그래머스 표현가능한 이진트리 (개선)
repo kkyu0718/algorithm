@@ -1,0 +1,74 @@
+// 개선하기 
+// 1. string 더해주는거 string builder로 바꿔주기 
+// -> 많이 해야하는 일은 아니라서 시간에 크게 영향주지 않을 듯
+// 2. 중간에 서브트리의 루트 노드가 0일때 모두가 0 이어야 한다 search 가 오래걸리는거 같기도 
+
+//4:10 -> 한시간...실화인가..
+
+// 1, 1 + 2, 1+2*2, 1+2*2*2 로 맞춰주기
+// 서브트리의 루트 찾는 dfs 중단 까지
+
+class Solution {
+    static boolean flag = false;
+    public int[] solution(long[] numbers) {
+        int[] answer = new int[numbers.length];
+        // System.out.println(Long.parseLong("008"));
+        
+        for(int i = 0; i < numbers.length; i++ ) {
+            String binaryString = Long.toBinaryString(numbers[i]);
+            StringBuilder sb = new StringBuilder(binaryString);
+            long binaryLength = checkLength(binaryString.length());
+            // while(binaryString.length() < binaryLength) {
+            //     binaryString = "0" + binaryString;
+            // }
+            // System.out.println(binaryString);
+            
+            while(sb.length() < binaryLength) {
+                sb.insert(0, "0");
+            }
+            binaryString = sb.toString();
+            
+            flag = true;
+            
+            if(binaryString.equals("1")){
+                flag = true;
+            }
+            else {
+                dfs(binaryString, '1');
+            }
+            
+            if(flag == true) {
+                answer[i] = 1;
+            }
+        }
+        
+        return answer;
+    }
+    
+    private long checkLength(int n) {
+        while((n & (n+1)) != 0) {
+            n++;
+        }
+        return n;
+    }
+    
+    private void dfs(String s, char c) {
+        // boolean temp = true;
+        // for(int i = 0; i < s.length(); i++) {
+        //     if(s.charAt(i) == '1') {
+        //         temp = false;
+        //     }
+        // }
+        // if(temp == true) return;
+        
+        int mid = s.length() / 2;
+        if(s.charAt(mid) == '0' && s.contains("1") == true) {
+            flag = false;
+            return;
+        }
+        
+        if(mid == 1) return;
+        dfs(s.substring(0, mid), c);
+        dfs(s.substring(mid+1, s.length()), c);
+    }
+}

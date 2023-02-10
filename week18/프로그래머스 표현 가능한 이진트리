@@ -1,0 +1,64 @@
+//4:10 -> 한시간...실화인가..
+
+// 1, 1 + 2, 1+2*2, 1+2*2*2 로 맞춰주기
+// 서브트리의 루트 찾는 dfs 중단 까지
+
+class Solution {
+    static boolean flag = false;
+    public int[] solution(long[] numbers) {
+        int[] answer = new int[numbers.length];
+        // System.out.println(Long.parseLong("008"));
+        
+        for(int i = 0; i < numbers.length; i++ ) {
+            String binaryString = Long.toBinaryString(numbers[i]);
+            long binaryLength = checkLength(binaryString.length());
+            while(binaryString.length() < binaryLength) {
+                binaryString = "0" + binaryString;
+            }
+            // System.out.println(binaryString);
+            flag = true;
+            
+            if(binaryString.equals("1")){
+                flag = true;
+            }
+            else {
+                dfs(binaryString);
+            }
+            
+            if(flag == true) {
+                answer[i] = 1;
+            }
+        }
+        
+        return answer;
+    }
+    
+    private long checkLength(int n) {
+        while((n & (n+1)) != 0) {
+            n++;
+        }
+        return n;
+    }
+    
+    private void dfs(String s) {
+        boolean temp = true;
+        for(int i = 0; i < s.length(); i++) {
+            if(s.charAt(i) == '1') {
+                temp = false;
+            }
+        }
+        if(temp == true) return;
+        
+        int mid = s.length() / 2;
+        // System.out.println(s.charAt(mid));
+
+        if(s.charAt(mid) == '0') {
+            flag = false;
+            return;
+        }
+        
+        if(mid == 1) return;
+        dfs(s.substring(0, mid));
+        dfs(s.substring(mid+1, s.length()));
+    }
+}

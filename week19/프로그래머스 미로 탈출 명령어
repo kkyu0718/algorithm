@@ -1,0 +1,52 @@
+// 11:56
+// 요약 백트래킹 문제
+// 1. 처음부터 불가능한 것을 판별할 수 있는 경우 : 시작 좌표와 끝 좌표를 이용해서 %2 == 0 조건
+// 2. 탐색 와중에 커팅이 가능한 경우 : 이미 남은 거리가 초과된 경우
+import java.util.*;
+
+class Solution {
+    String[] s = new String[] {"d", "l", "r", "u"};
+    int[] dr = new int[] {1, 0, 0, -1};
+    int[] dc = new int[] {0, -1, 1, 0};
+    static String answer = "";
+    boolean flag = false;
+
+    public String solution(int n, int m, int x, int y, int r, int c, int k) {
+        
+        int[][] map = new int[n][m];
+        
+        // 백 트래킹 조건 (처음부터)
+        if((k - Math.abs(x - r) - Math.abs(y - c)) % 2 != 0) return "impossible";
+        
+        dfs(0, x-1, y-1, r-1, c-1, k, new StringBuilder(""), n, m);
+        // System.out.println("answer is " + answer);
+        if(answer.equals("")){
+            answer = "impossible";
+        }
+        return answer;
+    }
+    
+    private void dfs(int count, int x, int y, int ex, int ey, int k, StringBuilder sb, int n, int m) {
+        if(flag == true || count + Math.abs(ex-x) + Math.abs(ey-y) > k) return;
+        if(count == k ) {
+            if(x == ex && y == ey){
+                answer = sb.toString();
+                flag = true;
+                // System.out.println("success " + answer);
+            }
+            return;
+        }    
+        // System.out.println(x+ " "+ y);
+        for(int i = 0; i < 4; i++) {
+            int r = x + dr[i];
+            int c = y + dc[i];
+            // System.out.println("r :" + r + ", c : "+ c);
+            // System.out.println("ex :" + ex + ", ey : "+ ey);
+            // System.out.println(sb.toString()+s[i]);
+            if(r < 0 || r >= n || c < 0 || c >= m) continue;
+            
+            dfs(count+1, r, c, ex, ey, k, new StringBuilder(sb.toString()+s[i]), n, m);
+        }
+        return;
+    }
+}

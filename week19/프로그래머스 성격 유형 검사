@@ -1,0 +1,89 @@
+//6:10
+import java.util.*;
+class Solution {
+    HashMap<Character, Integer> map = new HashMap<>();
+    
+    public String solution(String[] survey, int[] choices) {
+        // 같으면 사전순
+        map.put('R',0);
+        map.put('T',0);
+        map.put('C',0);
+        map.put('F',0);
+        map.put('J',0);
+        map.put('M',0);
+        map.put('A',0);
+        map.put('N',0);
+    
+        for(int i = 0; i < choices.length; i++) {
+            Character left = survey[i].charAt(0);
+            Character right = survey[i].charAt(1);
+            check(left, right, choices[i]);
+        }
+        map.entrySet().forEach(entry -> {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        });
+        String answer = calculate(map);
+        return answer;
+    }
+    
+    private void check(Character left, Character right, int c) {
+        if(c == 1) {
+            map.put(left, map.get(left) + 3);
+        }
+        if(c == 2) {
+            map.put(left, map.get(left) + 2);
+        }
+        if(c == 3) {
+            map.put(left, map.get(left) + 1);
+        }
+        // if(c == 4) {
+        //     pass;
+        // }
+        if(c == 5) {
+            map.put(right, map.get(right) + 1);
+        }
+        if(c == 6) {
+            map.put(right, map.get(right) + 2);
+        }
+        if(c == 7) {
+            map.put(right, map.get(right) + 3);
+        }
+    }
+    
+    private String calculate(HashMap map) {
+        String answer = "";
+        int r = (int) map.get('R');
+        int t = (int)map.get('T');
+        int c = (int)map.get('C');
+        int f = (int)map.get('F');
+        int j = (int)map.get('J');
+        int m = (int)map.get('M');
+        int a = (int)map.get('A');
+        int n = (int) map.get('N');
+        
+        if(r == t) {
+            answer += "R";
+        } else{
+            answer += r > t ? "R" : "T";
+        }
+        
+        if(c == f) {
+            answer += "C";
+        } else{
+            answer += c > f ? "C" : "F";
+        }
+        
+        if(j == m) {
+            answer += "J";
+        } else{
+            answer += j > m ? "J" : "M";
+        }
+        
+        if(a == n) {
+            answer += "A";
+        } else{
+            answer += a > n ? "A" : "N";
+        }
+        return answer;
+    }
+}

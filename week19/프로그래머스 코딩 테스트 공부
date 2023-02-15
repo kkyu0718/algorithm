@@ -1,0 +1,63 @@
+//2:47 틀림!
+import java.util.*;
+
+class Solution {
+    public int solution(int alp, int cop, int[][] problems) {
+        int answer = 0;
+        int maxAlgo = 0;
+        int maxCode = 0;
+        
+        for(int i = 0; i < problems.length; i++) {
+            maxAlgo = Math.max(maxAlgo, problems[i][0]);
+            maxCode = Math.max(maxCode, problems[i][1]);
+        }
+        
+        // 이미 목표치를 달성한 경우 수치 조정
+        if(maxAlgo <= alp) {
+            alp = maxAlgo;
+        }
+        if(maxCode <= cop) {
+            cop = maxCode;    
+        }
+        
+        int[][] dp = new int[maxAlgo+1][maxCode+1];
+        
+        for(int i = 0; i < dp.length; i++) {
+            for(int j = 0; j < dp[0].length; j++) {
+                dp[i][j] = 150;
+            }
+        }
+        
+        dp[alp][cop] = 0;
+        
+        // 연산이 이미 과거에 연산한 거에 영향만 주지 않는다면 ㅇㅋ
+        for(int i = alp; i <= maxAlgo; i++) {
+            for(int j = cop; j <= maxCode; j++) {
+                // 알고 공부
+                if(i+1 <= maxAlgo) {
+                    dp[i+1][j] = Math.min(dp[i+1][j], dp[i][j] + 1);
+                } else {
+                    dp[maxAlgo][j] = Math.min(dp[maxAlgo][j], dp[i][j] + 1);
+                }
+                
+                // 코딩 공부
+                if(j+1 <= maxCode) {
+                    dp[i][j+1] = Math.min(dp[i][j+1], dp[i][j] + 1);
+                } else {
+                    dp[i][maxCode] = Math.min(dp[i][maxCode], dp[i][j] + 1);
+                }
+                
+                // 문제 풀기
+                for(int[] p: problems) {
+                    if(i >= p[0] && j >= p[1]) { // 풀 수 있다면
+                        int a = Math.min(i+p[2], maxAlgo);
+                        int b = Math.min(j+p[3], maxCode);
+                        dp[a][b] = Math.min(dp[a][b], dp[i][j] + p[4]);
+                    }
+                }
+            }
+        }
+        
+        return dp[maxAlgo][maxCode];
+    }
+}

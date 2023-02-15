@@ -1,0 +1,52 @@
+//2:12
+class Solution {
+    // 투포인터
+    // overflow : long 고려
+    // 안되면 -1 -> 모두 탐색후
+    
+    // 처음부터 안되는 경우 : 총합이 홀수, 
+    public int solution(int[] queue1, int[] queue2) {
+        int n1 = queue1.length;
+        int n2 = queue2.length;
+        long sum = 0;
+        long sumNow = 0;
+        
+        int[] arr = new int[n1 + n2];
+        for(int i = 0; i < n1; i++ ){
+            arr[i] = queue1[i];
+            sum += queue1[i];
+            sumNow += queue1[i];
+        }
+        for(int i = n1; i < n1+n2; i++) {
+            arr[i] = queue2[i-n1];
+            sum += queue2[i-n1];
+        }
+        
+        if(sum % 2 != 0) return -1;
+        
+        long target = sum / 2;
+        int left = 0;
+        int right = n1 -1;
+        int answer = 0;
+        
+        while(right < n1+ n2) {
+            if(sumNow == target) {
+                return answer;
+            }
+            
+            else if(sumNow < target) {
+                right += 1;
+                // right = (right + 1) % (n1+n2);
+                if(right < n1 + n2)  sumNow += arr[right];
+            }
+            
+            else{
+                sumNow -= arr[left];
+                left += 1;
+            }
+            answer += 1;
+        }
+        
+        return -1;
+    }
+}

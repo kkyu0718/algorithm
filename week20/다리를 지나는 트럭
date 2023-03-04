@@ -1,0 +1,51 @@
+// 2:10
+import java.util.*;
+
+class Solution {
+    class Node {
+        private int weight;
+        private int time;
+        
+        Node(int weight, int time) {
+            this.weight = weight;
+            this.time = time;
+        }
+    }
+    
+    public int solution(int bridge_length, int weight, int[] truck_weights) {
+        int answer = 0;
+        int t = 0;
+        int cnt = 0;
+        int totalWeight = 0;
+        int n = truck_weights.length;
+        int j = 0;
+        Queue<Node> q = new LinkedList<>();
+        
+        while(cnt < n) {
+            t += 1;
+
+            // 빼는거
+            while(!q.isEmpty() && (t - q.peek().time) == bridge_length) {
+                cnt++;
+                totalWeight -= q.peek().weight;
+                q.poll();
+            }
+            
+            // 더하는거
+            if(j < truck_weights.length && totalWeight + truck_weights[j] <= weight) {
+                q.offer(new Node(truck_weights[j], t));
+                totalWeight += truck_weights[j];
+                j++;
+            }
+            
+//             System.out.println("------" + t);
+//             for(Node node : q) {
+//                 System.out.print(node.weight + " " + node.time);
+//                 System.out.println();
+//             }
+            
+
+        }
+        return t;
+    }
+}

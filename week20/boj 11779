@@ -1,0 +1,99 @@
+
+import java.io.*;
+import java.util.*;
+public class Main {
+    static class Node {
+        private int v;
+        private int weight;
+
+        Node(int v, int weight) {
+            this.v = v;
+            this.weight = weight;
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int V = Integer.parseInt(st.nextToken());
+
+        st = new StringTokenizer(br.readLine());
+        int E = Integer.parseInt(st.nextToken());
+
+        // graph 초기화
+        ArrayList<ArrayList<Node>> graph = new ArrayList<>();
+        for(int i = 0; i <= V; i++) {
+            graph.add(new ArrayList<Node>());
+        }
+
+        // dist 초기화
+        int[] dist = new int[V+1];
+        int[] pre = new int[V+1];
+        for(int i = 0; i <= V; i++) {
+            dist[i] = Integer.MAX_VALUE;
+        }
+
+        for(int i = 0; i < E; i++) {
+            st = new StringTokenizer(br.readLine());
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
+
+            graph.get(u).add(new Node(v, w));
+        }
+
+        st = new StringTokenizer(br.readLine());
+        int start = Integer.parseInt(st.nextToken());
+        int end = Integer.parseInt(st.nextToken());
+
+        dist[start] = 0;
+
+        PriorityQueue<Node> pq = new PriorityQueue<>(((o1, o2) -> Integer.compare(o1.weight, o2.weight)));
+        pq.offer(new Node(start, 0));
+
+        while(!pq.isEmpty()) {
+            Node curNode = pq.poll();
+            // 도착 도시에 도착한다면 while 탈출
+            if(curNode.v == end) {
+                break;
+            }
+
+            // 이미 저장된 값보다 크면 continue
+            if(dist[curNode.v] < curNode.weight) continue;
+
+            ArrayList<Node> adjs = graph.get(curNode.v);
+            for(int i = 0; i < adjs.size(); i++) {
+                Node nxtNode = adjs.get(i);
+
+                if(dist[nxtNode.v] > dist[curNode.v] + nxtNode.weight) {
+                    dist[nxtNode.v] = dist[curNode.v] + nxtNode.weight;
+                    pq.offer(new Node(nxtNode.v, dist[nxtNode.v]));
+                    pre[nxtNode.v] = curNode.v;
+                }
+            }
+        }
+
+
+
+        bw.write(dist[end]+"\n");
+        Stack<Integer> answer = new Stack<>();
+
+        int n = end;
+        while(n != start) {
+            answer.add(n);
+            n = pre[n];
+        }
+        answer.add(start);
+        bw.write(answer.size()+"\n");
+        StringBuilder sb = new StringBuilder();
+        while(!answer.isEmpty()) {
+            sb.append(answer.pop() + " ");
+        }
+
+        bw.write(sb.toString());
+        bw.flush();
+    }
+
+}

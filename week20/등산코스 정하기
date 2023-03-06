@@ -1,0 +1,88 @@
+import java.util.*;
+class Solution {
+    class Node {
+        private Integer vertex;
+        private Integer cost;
+        
+        Node(Integer vertex, Integer cost) {
+            this.vertex = vertex;
+            this.cost = cost;
+        }
+    }
+    // 10:02
+    public int[] solution(int n, int[][] paths, int[] gates, int[] summits) {
+        int intensity = Integer.MAX_VALUE;
+        int summit =0;
+        ArrayList<int[]> answer = new ArrayList<>();
+        // path 정리 양방향
+        ArrayList<ArrayList<Node>> graph = new ArrayList<>();
+        for(int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<Node>());
+        }
+        
+        for(int[] p : paths) {
+            if(isGate(p[0], gates) || isSummit(p[1], summits)) {
+                graph.get(p[0]).add(new Node(p[1], p[2]));
+            }
+            else if(isSummit(p[0], summits) || isGate(p[1], gates)) {
+                graph.get(p[1]).add(new Node(p[0], p[2]));
+            } else{
+                graph.get(p[0]).add(new Node(p[1], p[2]));
+                graph.get(p[1]).add(new Node(p[0], p[2]));
+            }
+        }
+        
+        // for 시작점 - 시작점 제외 다익스트라
+        // for(int g: gates) {
+            int[] dist = new int[n+1];
+            for(int i = 0; i < dist.length; i++) {
+                dist[i] = Integer.MAX_VALUE;
+            }
+            // dist[g] = 0;
+            
+            PriorityQueue<Node> q = new PriorityQueue<>((o1, o2) -> Integer.compare(o1.cost, o2.cost));
+            for(int g: gates) {
+                q.offer(new Node(g, 0));
+                dist[g] = 0;
+            }
+            
+            
+            while(!q.isEmpty()) {
+                Node curNode = q.poll();
+                
+                if(curNode.cost > dist[curNode.vertex]) continue;
+                
+                ArrayList<Node> adjs = graph.get(curNode.vertex);
+                
+                for(Node nxtNode: adjs) {
+                    if(dist[nxtNode.vertex] > Math.max(dist[curNode.vertex], nxtNode.cost)) {
+                        dist[nxtNode.vertex] = Math.max(dist[curNode.vertex], nxtNode.cost);
+                        q.offer(new Node(nxtNode.vertex, Math.max(dist[curNode.vertex], nxtNode.cost)));
+                    }
+                }
+            }
+            
+            for(int s: summits) {
+                if(intensity > dist[s] || ((intensity == dist[s]) && summit > s)) {
+                    intensity = dist[s];
+                    summit = s;
+                } 
+            }
+        // }        
+        return new int[]{summit, intensity};
+    }
+    
+    private boolean isGate(int n, int[] gates) {
+        for(int g : gates) {
+            if(g == n) return true;
+        }
+        return false;
+    }
+    
+    private boolean isSummit(int n, int[] summits) {
+        for(int s: summits) {
+            if(s == n) return true;
+        }
+        return false;
+    }
+}

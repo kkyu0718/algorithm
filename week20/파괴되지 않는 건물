@@ -1,0 +1,43 @@
+import java.util.*;
+class Solution {
+    // 2:37
+    public int solution(int[][] board, int[][] skill) {
+        int answer = 0;
+        int n = board.length;
+        int m = board[0].length;
+        
+        int[][] dp = new int[n+1][m+1];
+        
+        for(int i = 0; i < skill.length; i++) {
+            int[] s = skill[i];
+            int num = s[0] == 1 ? -s[5] : s[5];
+            dp[s[1]][s[2]] += num;
+            dp[s[1]][s[4]+1] += -num;
+            dp[s[3]+1][s[2]] += -num;
+            dp[s[3]+1][s[4]+1] += num; // 끝줄 row col 하나씩 더해줘야하기 때문에 dp도 하나씩 더 큰것으로 해야함
+        } 
+        
+        for(int i = 0; i < n; i ++) {
+            for(int j = 1; j < m; j++) {
+                dp[i][j] += dp[i][j-1];
+            }
+        }
+        
+        for(int i = 1; i < n; i ++) {
+            for(int j = 0; j < m; j++) {
+                dp[i][j] += dp[i-1][j];
+            }
+        }
+        
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                board[i][j] += dp[i][j];
+                if(board[i][j] >= 1) answer++;
+            }
+        }
+        
+        return answer;
+    }
+    
+
+}

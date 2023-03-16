@@ -1,0 +1,59 @@
+import java.util.*;
+class Solution {
+    // 9:10
+    static boolean[] visit;
+    static ArrayList<ArrayList<Integer>> adjs;
+    static int answer = 0;
+    
+    public int solution(int[] info, int[][] edges) {
+        int n = info.length;
+        visit = new boolean[n];
+        
+        adjs = new ArrayList<>();
+        for(int i = 0; i < n; i++) {
+            adjs.add(new ArrayList<Integer>());
+        }
+        for(int i = 0; i < edges.length; i++) {
+            adjs.get(edges[i][0]).add(edges[i][1]);
+        }
+        
+        // dfs
+        visit[0] = true;
+        ArrayList<Integer> adj = new ArrayList<Integer>();
+        adj.add(0);
+        dfs(0, 0, 0, info, adj);
+        
+        return answer;
+    }
+    
+    private void print(ArrayList<Integer> array) {
+        for(int i = 0; i < array.size(); i++) {
+            System.out.print(array.get(i) + " ");
+        }
+        System.out.println();
+    }
+    
+    private void dfs(int s, int w, int node, int[] info, ArrayList<Integer> adj){
+        print(adj);        
+        s = info[node] == 0 ? s+1 : s;
+        w = info[node] == 1 ? w+1 : w;
+        
+        if(s <= w) {
+            return;
+        }
+        answer = Math.max(answer, s);
+        
+        ArrayList<Integer> list = new ArrayList<>();
+		list.addAll(adj);
+        list.addAll(adjs.get(node));
+        list.remove(Integer.valueOf(node));
+        
+        
+        for(int next: list) {
+            
+            dfs(s, w, next, info, list);
+
+        }
+        
+    }
+}

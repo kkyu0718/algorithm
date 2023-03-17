@@ -1,0 +1,89 @@
+class Solution {
+    // dfs 
+    // 1. 탐색 2. 점수 높으면 갈아끼우기 (점수 같으면 낮은 점수 많이 맞춰준거 확인
+    // 3. 우승 못하는 경우
+    
+    static int[] win = new int[11];
+    static int[] answer = new int[11];
+    static int lionWinScoreDiff=0;
+    
+    static int[] info;
+    static int peachTotal;
+    private void print(int[] array) {
+        for(int i = 0; i < array.length; i++) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.println();
+    }
+    
+    private int[] compare(int[] win, int[] answer) {
+        for(int i = 10; i >= 0; i--) {Q
+            if(win[i] == answer[i]) {
+                continue;
+            }
+            else {
+                if(win[i] > answer[i]) return win;
+                return answer;
+            }
+        }
+        return win;
+    }
+    
+    private void dfs(int idx, int remain, int[] info) {
+            if(idx == 11 || remain == 0) {
+                if(remain != 0) {
+                    win[10] = remain;
+                }
+                
+                int peachTotal = 0;
+                int lionTotal = 0;
+
+                for(int i = 0; i < win.length; i++) {
+                    if(win[i] == 0 && info[i] == 0) continue;
+                    lionTotal += (win[i] >= 1 ? 1 : 0) * (10-i);
+                    peachTotal += (win[i] == 0 ? 1 : 0) * (10-i);
+                }
+                // System.out.println("lionTotal "+ lionTotal);
+                // System.out.println("peachTotal "+ peachTotal);
+                
+                if(lionTotal > peachTotal) {
+                    // print(win);
+                    int diff = lionTotal - peachTotal;
+                    if(lionWinScoreDiff < diff) {
+                        lionWinScoreDiff = diff;
+                        for(int i = 0; i < 11; i++) {
+                            answer[i] = win[i];
+                        }
+                    } 
+                    else if(lionWinScoreDiff == diff) {
+                        // print(win);
+                        int[] result = compare(win, answer);
+                        for(int i = 0; i < 11; i++) {
+                            answer[i] = result[i];
+                        }
+                    }
+                } 
+            return;
+        }
+        
+        int peachScore = info[idx];
+        
+        // 지는 경우
+        dfs(idx + 1, remain, info);
+            
+        // 이기는 경우
+        win[idx] = peachScore + 1;
+        if(remain - (peachScore+1) >= 0) dfs(idx + 1, remain - (peachScore + 1), info);
+        win[idx] = 0;
+    }
+    
+    // 3:37
+    public int[] solution(int n, int[] info) {
+        
+        
+        dfs(0, n, info);
+        if(lionWinScoreDiff == 0) return new int[]{-1};
+        return answer;
+        // return new int[] {0};
+    }
+}

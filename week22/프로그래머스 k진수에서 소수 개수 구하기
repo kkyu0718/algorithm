@@ -1,0 +1,39 @@
+import java.util.*;
+class Solution {
+    //11:01
+    // P는 0포함 x
+    // 배운거 stringbuilder에는 reverse 기능이 있다
+    public int solution(int n, int k) {
+        int answer = 0;
+        // 조건 카운트
+        String[] s = convert(n,k).split("0");
+        
+        for(int i = 0; i < s.length; i++) {
+            if(!s[i].equals("") && isPrime(Long.parseLong(s[i]))) {
+                answer++;
+                System.out.println(s[i] + " " + isPrime(Long.parseLong(s[i])));
+            }
+            
+        }
+        return answer;
+    }
+    
+    private boolean isPrime(long n) {
+        if(n == 1) return false;
+        for(long i = (long)Math.sqrt(n); i > 1; i--) {
+            if(n % i == 0) return false;
+        }
+        return true;
+    }
+    
+    
+    private String convert(int n, int k) {
+        StringBuilder sb = new StringBuilder();
+        while(n/k != 0) {
+            sb.append(n%k);
+            n = n/k;
+        }
+        sb.append(n%k);
+        return sb.reverse().toString();
+    }
+}

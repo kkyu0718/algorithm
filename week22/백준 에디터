@@ -1,0 +1,107 @@
+import java.io.*;
+import java.util.*;
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        String s = st.nextToken();
+        Integer[] pre = new Integer[1000000];
+        Integer[] next = new Integer[1000000];
+        String[] data = new String[1000000];
+
+        for(int i = 1; i <= s.length(); i++) {
+            pre[i] = i-1;
+            next[i] = i+1;
+            data[i] = Character.toString(s.charAt(i-1));
+        }
+        pre[0] = -1;
+        next[0] = 1;
+        data[0] = null;
+        next[s.length()] = -1;
+
+        st = new StringTokenizer(br.readLine());
+        Integer n = Integer.parseInt(st.nextToken());
+
+        int cursor = s.length();
+        int newCursor = s.length() + 1;
+
+        for(int i = 0; i < n ; i++) {
+//            print(pre, next, data);
+            st = new StringTokenizer(br.readLine());
+            String cmd = st.nextToken();
+//            System.out.println(cmd);
+            if(cmd.charAt(0) == 'L') {
+                if(pre[cursor] == -1) {
+                    continue;
+                }
+                cursor = pre[cursor];
+            } else if (cmd.charAt(0) == 'D') {
+                if(next[cursor] == -1) {
+                        continue;
+                }
+                cursor = next[cursor];
+            } else if (cmd.charAt(0) == 'B') {
+                if(pre[cursor] == -1) {
+                    continue;
+                }
+                if(pre[cursor] != -1) {
+                    next[pre[cursor]] = next[cursor];
+
+                }
+
+                if(next[cursor] != -1) {
+                    pre[next[cursor]] = pre[cursor];
+                }
+
+                cursor = pre[cursor];
+
+
+            } else {
+                String a = st.nextToken();
+
+                data[newCursor] = a;
+                pre[newCursor] = cursor;
+                next[newCursor] = next[cursor];
+//                System.out.println("cursor" + cursor + " " + newCursor);
+//                System.out.println("new cursor" + pre[newCursor] + " " + next[newCursor] + " " + data[newCursor]);
+
+                if(next[cursor] != -1) {
+                    pre[next[cursor]] = newCursor;
+                }
+
+                next[cursor] = newCursor;
+
+//                System.out.println("cursor" + cursor + " " + newCursor);
+//                System.out.println("new cursor" + pre[newCursor] + " " + next[newCursor] + " " + data[newCursor]);
+                cursor = newCursor;
+                newCursor++;
+            }
+
+        }
+//        print(pre, next, data);
+
+        cursor = 0;
+        while(true) {
+            if(data[cursor] != null) {
+                bw.write(data[cursor]+"");
+            }
+
+            if(next[cursor] == -1) break;
+            cursor = next[cursor];
+        }
+        bw.flush();
+    }
+
+    public static void print(Integer[] pre, Integer[] next, String[] data){
+        int i = 0;
+        while(next[i] != null) {
+            System.out.println(i + " " + pre[i] + " " + next[i] + " " + data[i]);
+            i++;
+        }
+        System.out.println();
+    }
+
+}

@@ -1,0 +1,58 @@
+class Solution {
+    public int[] solution(String[][] places) {
+        int[] answer = new int[places.length];
+        for(int i = 0; i < places.length; i++) {
+            answer[i] = check(places[i]);
+        }
+        return answer;
+    }
+    
+    private boolean OOB(int i, int j) {
+        if(i < 0 || i >= 5 || j < 0 || j >= 5) return false;
+        return true;
+    }
+    
+    private int check(String[] p) {
+        
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        int[] dr2 = {-1, -1, 1, 1};
+        int[] dc2 = {1, -1, 1, -1};
+        
+        for(int i = 0; i < p.length; i++) {
+            String l = p[i];
+            for(int j = 0; j < l.length(); j++) {
+                Character c = l.charAt(j);
+                if(c == 'P') {
+                    for(int k = 0; k < 4; k++) {
+                        int nr = i + dr[k];
+                        int nc = j + dc[k];
+                        if(OOB(nr, nc) == false) continue;
+                        if(p[nr].charAt(nc) == 'P') {
+                            return 0;
+                        }
+                    }
+                    
+                    for(int k = 0; k < 4; k++) {
+                        int nr = i + 2*dr[k];
+                        int nc = j + 2*dc[k];
+                        if(OOB(nr, nc) == false) continue;
+                        if(p[nr].charAt(nc) == 'P') {
+                            if(p[i + dr[k]].charAt(j + dc[k]) != 'X') return 0;
+                        }
+                    }
+                    
+                    for(int k = 0; k < 4; k++) {
+                        int nr = i + dr2[k];
+                        int nc = j + dc2[k];
+                        if(OOB(nr, nc) == false) continue;
+                        if(p[nr].charAt(nc) == 'P') {
+                            if(p[i].charAt(nc) != 'X' || p[nr].charAt(j) != 'X') return 0;
+                        }
+                    }
+                }
+            }
+        }
+        return 1;
+    }
+}

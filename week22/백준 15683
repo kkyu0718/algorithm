@@ -1,0 +1,128 @@
+import java.io.*;
+import java.util.*;
+public class Main {
+    static class Node {
+        private int r, c, type;
+        Node(int r, int c, int type) {
+            this.r = r;
+            this.c = c;
+            this.type = type;
+        }
+    }
+    static int dx[] = {-1, 0, 1, 0};
+    static int dy[] = {0, -1, 0, 1};
+
+    static int answer = 100;
+    static int n, m;
+
+    public static void main(String[] args) throws IOException {
+        // 8:31
+        // cctv는 서로 통과 가능
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+
+        int[][] map = new int[n][m];
+        List<Node> lst = new ArrayList<>();
+
+        for(int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            for(int j = 0; j < m; j++) {
+                map[i][j] = Integer.parseInt(st.nextToken());
+                if(map[i][j] != 0 && map[i][j] != 6) {
+                    lst.add(new Node(i, j, map[i][j]));
+                }
+            }
+        }
+
+        int num = lst.size();
+
+        for(int i = 0; i < (1 << (2 * num)); i++) {
+//            System.out.println(i + " /  "+ (1 << (2*num)));
+            int[][] b = new int[n][m];
+            for(int row = 0; row < n; row++) {
+                for(int col = 0; col < m; col++) {
+                    b[row][col] = map[row][col];
+                }
+            }
+
+            int brute = i;
+
+            for(int k = 0; k < num; k++) {
+//                System.out.println(k + " " + num);
+                int dir = brute % 4;
+                brute = brute/4;
+
+                Node node = lst.get(k);
+                int r = node.r;
+                int c = node.c;
+                int type = node.type;
+
+                if(type == 1) {
+                    b = upd(r, c, dir, b);
+                }
+                if(type == 2) {
+                    b = upd(r, c, dir, b);
+                    b = upd(r, c, dir+2, b);
+                }
+                if(type == 3) {
+                    b = upd(r, c, dir, b);
+                    b = upd(r, c, dir+1, b);
+                }
+                if(type == 4) {
+                    b = upd(r, c, dir, b);
+                    b = upd(r, c, dir+1, b);
+                    b = upd(r, c, dir+2, b);
+                }
+                if(type == 5) {
+                    b = upd(r, c, dir, b);
+                    b = upd(r, c, dir+1, b);
+                    b = upd(r, c, dir+2, b);
+                    b = upd(r, c, dir+3, b);
+                }
+            }
+            answer = Math.min(answer, count(b));
+//            print(b);
+        }
+
+        bw.write(answer+"");
+        bw.flush();
+    }
+    private static int count(int[][] b) {
+        int count = 0;
+        for(int i = 0; i < b.length; i++) {
+            for(int j = 0; j < b[0].length; j++) {
+                if(b[i][j] == 0) count+=1;
+            }
+        }
+        return count;
+    }
+    private static void print(int[][] b) {
+        for(int i = 0; i < b.length; i++) {
+            for(int j = 0; j < b[0].length; j++) {
+                System.out.print(b[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("--------------------");
+    }
+
+    private static int[][] upd(int r, int c, int dir, int[][] b) {
+        dir %= 4;
+        while(true) {
+            r += dx[dir];
+            c += dy[dir];
+            if(OOB(r,c) || b[r][c] == 6) break;
+            if(b[r][c] != 0) continue;
+            b[r][c] = 7;
+        }
+        return b;
+    }
+
+    private static boolean OOB(int r, int c) {
+        return r < 0 || r >= n || c < 0 || c >= m;
+    }
+}

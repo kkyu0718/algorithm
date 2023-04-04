@@ -1,0 +1,265 @@
+package algorithm;
+
+import java.util.*;
+import java.io.*;
+
+// 11:20
+// 10 min read
+public class Main {
+	
+	static int answer = 0;
+	static int[][] map;
+	static int[] dr = {-1, 1, 0, 0};
+	static int[] dc = {0, 0, -1, 1};
+	static int n, m;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+		
+		map = new int[n][n];
+		
+		for(int i = 0; i < n; i++) {
+			st = new StringTokenizer(br.readLine());
+			for(int j = 0; j < n; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+//		print(map);
+		
+		while(true) {
+			// 크기가 큰 블록 -> 기준블록 정렬 
+			List<Node> big = find(map);
+//			System.out.println("find");
+//			print(map);
+			
+			if(big == null) break;
+//			System.out.println("big");
+//			printNode(big);
+//			System.out.println("big --");
+
+			// 삭제
+			for(Node n: big) {
+				map[n.i][n.j] = -2;
+			}
+			// 답
+			answer += big.size() * big.size();
+//			System.out.println("delete");
+//			System.out.println("answer" + answer);
+//			print(map);
+			
+			gravity(map);
+//			System.out.println("gravity1");
+//			print(map);
+//			
+			rotate(map);
+//			System.out.println("rotate");
+//			print(map);
+//			
+			
+			gravity(map);
+//			System.out.println("gravity2");
+//			print(map);
+			
+			
+//			print(map);
+//			if(answer > 100) break;
+		}
+		System.out.println(answer);
+		
+	}
+	
+	private static void rotate(int[][] map) {
+		int[][] result = new int[n][n];
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				result[n-1-j][i] = map[i][j];
+			}
+		}
+		
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				map[i][j] = result[i][j];
+			}
+		}
+	}
+	
+	private static void gravity(int[][] map) {
+		for(int j = 0; j < n; j++) {
+			for(int i = n-1; i >= 0; i--) {
+				if(map[i][j] != -1 && map[i][j] != -2) {
+					int k = i;
+					while(k+1 < n && map[k+1][j] == -2) {
+						map[k+1][j] = map[k][j];
+						map[k][j] = -2;
+						k++;
+					}
+				}
+			}
+		}
+	}
+	
+	private static List<Node> find(int[][] map) {
+List<List<Node>> result = new ArrayList<>();
+		
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				if(map[i][j] != -1 && map[i][j] != 0 && map[i][j] != -2) {
+					List<Node> lst = bfs(i, j, map[i][j]);
+					if(lst == null) continue;
+					result.add(lst);
+				}
+			}
+		}
+//		
+//		System.out.println("---?");
+//		for(List<Node> temp: result) {
+//			printNode(temp);
+//		}
+//		System.out.println("--!");
+		
+		Collections.sort(result, (o1, o2) -> {
+			if(o1.size() == o2.size()) {
+				
+				int i1=0;
+				int i2=0;
+				int j1=0;
+				int j2=0;
+				int cnt1 = 0;
+				int cnt2 = 0;
+				
+				Collections.sort(o1, (e1, e2) -> {
+					if(e1.i == e2.i) return e1.j - e2.j;
+					return e1.i - e2.i;
+				});
+				Collections.sort(o2, (e1, e2) -> {
+					if(e1.i == e2.i) return e1.j - e2.j;
+					return e1.i - e2.i;
+				});
+				
+				for(int i = 0; i < o1.size(); i++) {
+					if(o1.get(i).color == 0) cnt1++;
+//					if(o1.get(i).color != 0) {
+//						i1 = o1.get(i).i;
+//						j1 = o1.get(i).j;
+//					}
+				}
+				
+				for(int i = 0; i < o2.size(); i++) {
+					if(o2.get(i).color == 0) cnt2++;
+//					if(o2.get(i).color != 0) {
+//						i2 = o2.get(i).i;
+//						j2 = o2.get(i).j;
+//					}
+				}
+				
+				for(int i = 0; i < o1.size(); i++) {
+//					if(o1.get(i).color == 0) cnt1++;
+					if(o1.get(i).color != 0) {
+						i1 = o1.get(i).i;
+						j1 = o1.get(i).j;
+						break;
+					}
+				}
+				for(int i = 0; i < o2.size(); i++) {
+//					if(o2.get(i).color == 0) cnt2++;
+					if(o2.get(i).color != 0) {
+						i2 = o2.get(i).i;
+						j2 = o2.get(i).j;
+						break;
+					}
+				}
+				// 무지개 블록 수가 가장 많은거
+				if(cnt1 == cnt2) {
+					// 행렬 번호 비교				
+					if(i1 == i2) {
+						return j2-j1;
+					}
+					return i2-i1;
+				}
+				return cnt2 - cnt1;
+				
+			}
+			return o2.size() - o1.size();
+		});
+		
+		if(result.size()==0) return null;
+		
+		List<Node> big = result.get(0);
+		return big;
+	}
+	
+	private static void print(int[][] map) {
+		System.out.println("------map-------");
+
+		for(int i = 0; i < map.length; i++) {
+			for(int j = 0; j < map[0].length; j++) {
+				System.out.print(map[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
+	
+	private static void printNode(List<Node> node) {
+		System.out.println("-------node------");
+
+		for(Node n : node) {
+			System.out.println("(" + n.i + " " + n.j + ")");
+		}
+	}
+	
+	private static List<Node> bfs(int i, int j, int c) {
+		// return 블록 정보
+		// 색 같아야함. 검은 블록 포함 안됨. 개수 2이상. 기준블록은 무지개 블록으로 하는거 아님
+		int[][] visit = new int[n][n];
+		
+		Queue<Node> q = new LinkedList<>();
+		q.add(new Node(i, j, c));
+		visit[i][j] = 1;
+		
+		List<Node> lst = new ArrayList<>();
+		lst.add(new Node(i, j, c));
+		
+		while(!q.isEmpty()) {
+			Node node = q.poll();
+			
+			for(int d = 0; d < 4; d++) {
+				int nr = node.i + dr[d];
+				int nc = node.j + dc[d];
+				
+				if(OOB(nr, nc) == true) continue;
+				if(visit[nr][nc] == 1) continue;
+				
+				if(map[nr][nc] == c || map[nr][nc] == 0) {
+					q.add(new Node(nr, nc, map[nr][nc]));
+					lst.add(new Node(nr, nc, map[nr][nc]));
+					visit[nr][nc] = 1;
+				}
+			}
+			
+		}
+		
+		if(lst.size() == 1) return null;
+		return lst;
+	}
+	
+	private static boolean OOB(int i, int j) {
+		return i < 0 || i >= n || j < 0 || j >= n;
+	}
+	
+	static class Node {
+		private int i, j, color;
+		
+		Node(int i, int j, int color) {
+			this.i = i;
+			this.j = j;
+			this.color = color;
+		}
+	}
+	
+}

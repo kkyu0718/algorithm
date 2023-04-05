@@ -1,0 +1,141 @@
+//1:32
+//시험장 가서 메모장 꼭 켜기
+
+import java.io.*;
+import java.util.*;
+
+class Main {
+	static int[][] map;
+	static int[][] robot;
+	static int n, k;
+	
+	static public void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		n = Integer.parseInt(st.nextToken());
+		k = Integer.parseInt(st.nextToken());
+		
+		map = new int[2][n];
+		robot = new int[2][n];
+		
+		st = new StringTokenizer(br.readLine());
+		for(int j = 0; j < n; j++) {
+			map[0][j] = Integer.parseInt(st.nextToken());
+		}
+		
+		for(int j = 0; j < n; j++) {
+			map[1][n-1-j] = Integer.parseInt(st.nextToken());
+		}
+//		print(map);
+		
+		int step = 1;
+		while(true) {
+			rotate(map);
+			rotateRobot(robot);
+//			print(map);
+			
+			move();
+//			print(map);
+			
+			up();
+//			print(map);
+			
+			boolean flag = check();
+			if(flag == true) break;
+//			System.out.println("map");
+//			print(map);
+//			System.out.println("robot");
+//			print(robot);
+			step ++;
+		}
+		
+		System.out.println(step);
+	}
+	
+	private static boolean check() {
+		int count = 0;
+		for(int i = 0; i < map.length; i++) {
+			for(int j = 0; j < map[0].length; j++) {
+				if(map[i][j] == 0) {
+					count++;
+				}
+			}
+		}
+		
+		return count >= k ? true : false;
+	}
+	
+	private static void up() {
+		if(map[0][0] >= 1) {
+			robot[0][0] = 1;
+			map[0][0] -= 1;
+		}
+	}
+	
+	private static void print(int[][] map) {
+		System.out.println("--------------");
+		for(int i = 0; i < map.length; i++) {
+			for(int j = 0; j < map[0].length; j++) {
+				System.out.print(String.format("%3d", map[i][j]));
+			}
+			System.out.println();
+		}
+	}
+	
+	private static void move() {
+		for(int j = n-1; j >= 0; j--) {
+			// 끝이라면
+			if(robot[0][j] == 1 && j==n-1) {
+				robot[0][n-1] = 0;
+			}
+			else if (robot[0][j] == 1 && robot[0][j+1] == 0 && map[0][j+1] >= 1) {
+				robot[0][j] = 0;
+				robot[0][j+1] = 1;
+				map[0][j+1] -= 1;
+			}
+		}
+	}
+	
+	private static void rotate(int[][] board) {
+		int[][] result = new int[2][n];
+		
+		for(int j = 0; j < n-1; j++) {
+			result[0][j+1] = board[0][j];
+		}
+		
+		for(int j = n-1; j > 0; j--) {
+			result[1][j-1] = board[1][j];
+		}
+		
+		result[1][n-1] = board[0][n-1];
+		result[0][0] = board[1][0];
+		
+		for(int i = 0; i < board.length; i++) {
+			for(int j = 0; j < board[0].length; j++) {
+				board[i][j] = result[i][j];
+			}
+		}
+	}
+	
+	private static void rotateRobot(int[][] board) {
+		int[][] result = new int[2][n];
+		
+		for(int j = 0; j < n-1; j++) {
+			result[0][j+1] = board[0][j];
+		}
+		
+		for(int j = n-1; j > 0; j--) {
+			result[1][j-1] = board[1][j];
+		}
+		
+		result[1][n-1] = 0;
+		result[0][0] = board[1][0];
+		
+		for(int i = 0; i < board.length; i++) {
+			for(int j = 0; j < board[0].length; j++) {
+				board[i][j] = result[i][j];
+			}
+		}
+	}
+}

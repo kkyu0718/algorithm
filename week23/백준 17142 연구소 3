@@ -1,0 +1,184 @@
+// 11:23
+package algorithm;
+
+import java.util.*;
+import java.io.*;
+
+class Main {
+	static int[][] map;
+	static int n, m;
+	
+	static List<Node> virus = new ArrayList<>();
+	static int[] visit;
+	static int answer = Integer.MAX_VALUE;
+	
+	static public void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+		
+		visit = new int[11];
+		map = new int[n][n];
+		
+		for(int i = 0; i < n; i++) {
+			st = new StringTokenizer(br.readLine());
+			for(int j = 0; j < n; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+				if(map[i][j] == 2) {
+					virus.add(new Node(i, j));
+				}
+			}
+		}
+		
+		// virus 후보군 뽑기
+		dfs(0, 0); 
+		answer = answer == Integer.MAX_VALUE ? -1 : answer;
+		System.out.println(answer);
+	}
+	
+	static private int check() {
+		int result = 0;
+		// 지도 초기화
+		int[][] board = new int[n][n];
+		int wall = 0;
+		int limit = 0;
+		
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				if(map[i][j] == 1) {
+					board[i][j] = -1;
+					wall++;
+				}
+				else if (map[i][j] == 0) {
+					board[i][j] = -2;
+					limit++;
+				}
+			}
+		}
+		
+		// bfs
+		Queue<BfsNode> q = new LinkedList<>();
+		int count = 0;
+		int[][] bfsVisit = new int[n][n];
+		
+		for(int i =0; i < virus.size(); i++) {
+			Node n = virus.get(i);
+			if(visit[i] == 0) {
+				board[n.i][n.j] = -3;
+			}
+			else {
+				board[n.i][n.j] = 0;
+				// 활성
+				q.add(new BfsNode(n.i, n.j, 0));
+				bfsVisit[n.i][n.j] = 1;
+//				count++;
+				
+			}
+		}
+		
+//		printMap(board);
+		
+		int[] dr = {-1, 1, 0, 0};
+		int[] dc = {0, 0, -1, 1};
+		
+		//bfs
+		while(!q.isEmpty()) {
+			if(count >= limit) break;
+			
+			BfsNode node = q.poll();
+			int r = node.i;
+			int c = node.j;
+			int s = node.s;
+			
+			for(int i = 0; i < 4; i++) {
+				int nr = r + dr[i];
+				int nc = c + dc[i];
+				
+				if(OOB(nr, nc) == true) continue;
+				if(board[nr][nc] != -1 && bfsVisit[nr][nc]==0) {
+					bfsVisit[nr][nc] = 1;
+					// 비활성 아니라면 증가
+					if(board[nr][nc] != -3) count++;
+					q.add(new BfsNode(nr, nc, s+1));
+					result = Math.max(result, s+1);
+					board[nr][nc] = s+1;
+				}
+			}
+		} 
+		
+		
+		
+		if(count < n*n - wall - virus.size()) {
+			result = -1;
+		}
+		
+//		printMap(board);
+//		System.out.println("count " + count);
+//		System.out.println("result " + result);
+//		printMap(board);
+//		System.out.println("count " + count);
+//		System.out.println("result " + result);
+		
+		return result;
+		// -1 : 벽, -2 : 빈칸, -3: 비활성, 0 : 활성, 
+	}
+	
+	static private boolean OOB(int r, int c) {
+		return r < 0 || r >= n || c < 0 || c >= n;
+	}
+	
+	static private void printMap(int[][] map) {
+		System.out.println("-------map----------");
+		for(int i = 0; i < map.length; i++) {
+			for(int j = 0; j < map[0].length; j++) {
+				System.out.print(String.format("%3s", map[i][j]));
+			}
+			System.out.println();
+		}
+	}
+	
+	static private void dfs(int idx, int cnt) {
+		if(cnt == m) {
+//			print(visit);
+			int result = check();
+			if(result != -1) answer = Math.min(answer, result);
+			return;
+		}
+		
+		for(int i = idx; i < virus.size(); i++) {
+			visit[i] = 1;
+			dfs(i+1, cnt+1);
+			visit[i] = 0;
+		}
+	}
+	
+	static private void print(int[] visit) {
+		for(int i = 0; i < visit.length; i++) {
+			if(visit[i] == 1) {
+				System.out.print(i + " ");
+			}
+		}
+		System.out.println();
+	}
+	
+	static class Node {
+		private int i, j;
+		
+		Node(int i, int j) {
+			this.i = i;
+			this.j = j;
+		}
+	}
+	
+	static class BfsNode {
+		private int i, j, s;
+		
+		BfsNode(int i, int j, int s) {
+			this.i = i;
+			this.j = j;
+			this.s = s;
+		}
+	}
+}

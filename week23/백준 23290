@@ -1,0 +1,306 @@
+package algorithm;
+import java.io.*;
+import java.util.*;
+// 20 min + 
+class Main {
+	static List<Node>[][] map = new ArrayList[4][4]; // 물고기 여러마리, 상어 기록
+	static int[][] smell = new int[4][4]; // 라운드 
+	static List<Node>[][] init = new ArrayList[4][4]; // 초기화, 방향저장
+	static int[] dr = {0, -1, -1, -1, 0, 1, 1, 1};
+	static int[] dc = {-1, -1, 0, 1, 1, 1, 0, -1};
+	static int[] drs = {-1, 0, 1, 0};
+	static int[] dcs = {0, -1, 0, 1};
+	static int sr, sc;
+	static int step = 1;
+	static int removedFishMax = 0;
+	// 상어 : 상좌하우
+	
+	// 0 : L
+	// 1 : LU
+	// 2 : U
+	// 3 : RU
+	// 4 : R
+	// 5 : RD
+	// 6 : D
+	// 7 : DL
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		int m = Integer.parseInt(st.nextToken());
+		int s = Integer.parseInt(st.nextToken());
+		
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				List<Node> l = new ArrayList<>();
+				map[i][j] = l;
+				init[i][j] = l;
+			}
+		}
+		
+		for(int i = 0; i < m; i++) {
+			st = new StringTokenizer(br.readLine());
+			int r = Integer.parseInt(st.nextToken())-1;
+			int c = Integer.parseInt(st.nextToken())-1;
+			int dir = Integer.parseInt(st.nextToken())-1;
+			init[r][c].add(new Node(r, c, dir));
+		}
+		
+		st = new StringTokenizer(br.readLine());
+		sr = Integer.parseInt(st.nextToken())-1;
+		sc = Integer.parseInt(st.nextToken())-1;
+		
+		
+		
+		map = deepcopy(init);
+		
+		for(int i = 0; i < s; i++) {
+//			System.out.println( step + "/" + s);
+//			System.out.println("shark : " + sr + " " + sc);
+			
+			// 1
+//			printMap(map);
+			
+
+			// 2
+//			System.out.println("fish move -----------");
+
+			map = moveFish();
+//			printMap(map);
+			
+			// 3
+//			System.out.println("shark move -----------");
+			removedFishMax = -100;
+			sharkMoveAns = new int[3];
+			moveShark(0);
+			removeFish();
+//			printMap(map);
+//			print(smell);
+			
+			// 4
+//			System.out.println("delete smell -----------");
+			deleteSmell(smell);
+//			print(smell);
+//			printMap(map);
+			
+//			System.out.println("copy -----------");
+			map = copy(map, init);
+			init = deepcopy(map);
+//			printMap(map);
+//			System.out.println("init -----------");
+//			printMap(init);
+			step++;
+		}
+		System.out.println(answer());
+	}
+	
+	private static List<Node>[][] deepcopy(List<Node>[][] init){
+		List<Node>[][] result = new ArrayList[4][4];
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				result[i][j] = new ArrayList<>();
+				for(Node n: init[i][j]) {
+					result[i][j].add(n);
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	private static int answer() {
+		int cnt = 0;
+		for(int i = 0; i<4; i++) {
+			for(int j =0; j < 4; j++) {
+				cnt += map[i][j].size();
+			}
+		}
+		return cnt;
+	}
+	
+	private static void deleteSmell(int[][] smell) {
+		for(int i = 0; i<4; i++) {
+			for(int j =0; j < 4; j++) {
+				if(smell[i][j] == step - 2) {
+					smell[i][j] = 0;
+				}
+			}
+		}
+	}
+	
+	private static void print(int[][] map) {
+		System.out.println("------------");
+
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				System.out.print(String.format("%2d", map[i][j]));
+			}
+			System.out.println();
+		}
+	}
+	
+	static int[] sharkMove = new int[3];
+	static int[] sharkMoveAns = new int[3];
+	
+	private static void removeFish() {
+//		System.out.println("delete dir" + sharkMoveAns[0] + " " + sharkMoveAns[1] + " " + sharkMoveAns[2]);
+
+		for(int i = 0; i < 3; i++) {
+			
+		}
+		for(int i = 0; i < 3; i++) {
+			int nr = sr + drs[sharkMoveAns[i]];
+			int nc = sc + dcs[sharkMoveAns[i]];
+//			System.out.println("shark moving to remove with dir" + nr + " " + nc);
+//			System.out.println("removedFish Max" +removedFishMax);
+
+			if(OOB(nr, nc)) {
+//				System.out.println("wrong!");
+				return;
+			}
+			
+			if(map[nr][nc].size()!= 0) {
+				map[nr][nc].clear();
+				smell[nr][nc] = step;
+			}
+			
+			
+			sr = nr;
+			sc = nc;
+		}
+	}
+	
+	private static void moveShark(int cnt) {
+		if(cnt == 3) {
+			int removedFish = countFish();
+			if(removedFish == -1) return;
+			if(removedFish > removedFishMax) {
+				for(int i = 0; i < 3; i++) {
+					sharkMoveAns[i] = sharkMove[i];
+				}
+				removedFishMax = removedFish;
+			}
+			return;
+		}
+		
+		for(int i = 0; i <4; i++) {
+			sharkMove[cnt] = i;
+			moveShark(cnt+1);
+		}
+	}
+
+	private static int countFish() {
+		List<Node>[][] result = deepcopy(map);
+		int count = 0;
+		int tempsr = sr;
+		int tempsc = sc;
+		
+		for(int i = 0; i < 3; i++) {
+			int nr = tempsr + drs[sharkMove[i]];
+			int nc = tempsc + dcs[sharkMove[i]];
+			
+			if(OOB(nr, nc)) {
+				return -1;
+			};
+			count += result[nr][nc].size();
+			result[nr][nc].clear();
+			tempsr = nr;
+			tempsc = nc;
+		}
+		
+		return count;
+	}
+	
+	private static List<Node>[][] moveFish() {
+		List<Node>[][] result = new ArrayList[4][4]; // 물고기 여러마리, 상어 기록
+		
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				List<Node> l = new ArrayList<>();
+				result[i][j] = l;
+			}
+		}
+		
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				for(int k = 0; k < map[i][j].size(); k++) {
+					Node n = map[i][j].get(k);
+					int r = n.r;
+					int c = n.c;
+					int dir = n.dir;
+					boolean flag = false;
+					
+					for(int d = 0; d < 8; d++) {
+						int ndir = (n.dir + (8-d)) % 8;
+						int nr = r + dr[ndir];
+						int nc = c + dc[ndir];
+//						System.out.println("dir " + dir + " to "+ ndir);
+						
+						if(OOB(nr, nc) || (nr == sr && nc == sc) || smell[nr][nc] != 0) continue;
+						
+						
+						// 성공한다면 중단
+						result[nr][nc].add(new Node(nr, nc, ndir));
+//						map[i][j].remove(n);
+//						map[nr][nc].add(new Node(nr, nc, ndir));
+						flag = true;
+						break;
+					}
+					
+					if(flag == false) {
+						result[r][c].add(new Node(r, c, dir));
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	private static boolean OOB(int r, int c) {
+		return r < 0 || r >= 4 || c < 0 || c >= 4;
+	}
+	
+	private static List<Node>[][] copy(List<Node>[][] m, List<Node>[][] init) {
+		List<Node>[][] result = new ArrayList[4][4];
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				result[i][j] = new ArrayList<>();
+				for(Node n: m[i][j]) {
+					result[i][j].add(n);
+				}
+				for(Node n: init[i][j]) {
+					result[i][j].add(n);
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	private static void printMap(List<Node>[][] map) {
+		System.out.println( "------map-------");
+
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				for(Node n : map[i][j]) {
+					System.out.print("(i, j, dir) : " + n.r +" " +n.c +" " + n.dir + " ");
+				}
+			}
+			System.out.println();
+
+		}
+	}
+	
+	static class Node {
+		private int r, c, dir;
+		
+		Node(int r, int c, int dir) {
+			this.r = r;
+			this.c = c;
+			this.dir = dir;
+		}
+	}
+	
+}

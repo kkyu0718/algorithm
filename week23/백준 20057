@@ -1,0 +1,154 @@
+package algorithm;
+import java.io.*;
+import java.util.*;
+class Main {
+	//3:05
+	static int answer;
+	static int[][] map;
+	static int n, r, c, dir, step, limit;
+	static int[] dr = {0, 1, 0, -1};
+	static int[] dc = {-1, 0, 1, 0};
+	static int[][] bmap = {{0, 0, 2, 0, 0}, {0, 10, 7, 1, 0},
+			{5, -1, 0, 0, 0}, {0, 10, 7, 1, 0}, {0, 0, 2, 0, 0}};
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		n = Integer.parseInt(st.nextToken());
+		map = new int[n][n];
+		
+		for(int i = 0; i < n; i++) {
+			st = new StringTokenizer(br.readLine());
+			for(int j = 0; j < n; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+		
+		r = n/2;
+		c = n/2;
+		dir = -1;
+		step = -1;
+		limit = 0;
+		
+		while(true) {
+			tornadoMove();
+			if(r == 0 && c == -1) {
+				break;
+			}
+		}
+		System.out.println(answer);
+	}
+	
+	private static int[][] rotateBmap(int dir) {
+		int[][] temp = deepcopy(bmap);
+		while(dir-->0) {
+			int[][] r = new int[bmap.length][bmap[0].length];
+			for(int i = 0; i < bmap.length; i++) {
+				for(int j = 0; j < bmap[0].length; j++) {
+					r[bmap.length -1 - j][i] = temp[i][j];
+				}
+			}
+			temp = deepcopy(r);
+		}
+		return temp;
+	}
+	
+	private static void wind() {
+		int[][] rotated = rotateBmap(dir);
+		int sand = map[r][c];
+		int sum = 0;
+		int alphadr = -1, alphadc = -1;
+		
+		for(int i = 0; i < 5; i++) {
+			for(int j = 0; j< 5; j++) {
+				if(rotated[i][j] == 0) continue;
+				else if(rotated[i][j] == -1) {
+					alphadr = i - 2;
+					alphadc = j - 2;
+					continue;
+				}
+				else {
+					int dr = i - 2;
+					int dc = j - 2;
+					int nr = r + dr;
+					int nc = c + dc;
+					
+					int dsand = (int) sand * rotated[i][j] / 100 ;
+					
+					if(nr < 0 || nr >= n || nc < 0 || nc >= n) {
+						// 날라감
+						answer += dsand;
+					} else {
+						map[nr][nc] += dsand; 
+					}
+					sum += dsand;
+				}
+			}
+		}
+		// 알파 계산
+		int nr = r + alphadr;
+		int nc = c + alphadc;
+		if(nr < 0 || nr >= n || nc < 0 || nc >= n) {
+			// 날라감
+			answer += (sand - sum);
+		} else {
+			map[nr][nc] += sand-sum;
+		}
+		
+		// 후처리
+		map[r][c] = 0;
+	}
+	
+	// 0 : 왼쪽
+	// 1 : 아래
+	// 2 : 오른쪽
+	// 3 : 위
+	private static void tornadoMove() {
+		step++;
+		if(step % 2 == 0) limit += 1;	
+		
+		dir = (dir + 1) % 4;
+		for(int i = 0; i < limit; i++) {
+			r = r + dr[dir];
+			c = c + dc[dir];
+			if(r== 0 && c == -1) break;
+			wind();
+//			print(map);
+		}
+	}
+	
+	private static void printCoord(int r, int c) {
+		System.out.println("r : " + r + " c : " + c);
+	}
+	
+	// a to b
+	private static int[][] deepcopy(int[][] a, int[][] b) {
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				b[i][j] = a[i][j];
+			}
+		}
+		return b;
+	}
+	
+	private static int[][] deepcopy(int[][] a) {
+		int[][] b = new int[a.length][a[0].length];
+ 		for(int i = 0; i < a.length; i++) {
+			for(int j = 0; j < a[0].length; j++) {
+				b[i][j] = a[i][j];
+			}
+		}
+		return b;
+	}
+	
+	private static void print(int[][] a) {
+		System.out.println("--------------");
+		for(int i = 0; i < a.length; i++) {
+			for(int j = 0; j < a[0].length; j++) {
+				System.out.print(String.format("%2d", a[i][j]));
+			}
+			System.out.println();
+		}
+	}
+}

@@ -1,0 +1,107 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static StringTokenizer st;
+    static int n, d, c;
+    static ArrayList<ArrayList<Node>> adjs;
+    static int[] dist;
+    static int NOT_VISITED = Integer.MAX_VALUE;
+
+    static public void main(String[] args) throws IOException{
+        st = new StringTokenizer(br.readLine());
+        int test = Integer.parseInt(st.nextToken());
+        for(int i = 0; i < test; i++) {
+            init();
+            dijkstra();
+            answer();
+        }
+    }
+
+    static void answer() throws IOException {
+        int visited = 0;
+        int time = 0;
+        for(int d : dist) {
+            if(d != NOT_VISITED) {
+                visited++;
+                time = Math.max(time, d);
+            }
+//            System.out.println(d);
+        }
+        bw.write(visited + " " + time+"\n");
+        bw.flush();
+    }
+
+    static void dijkstra() {
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        pq.add(new Node(c, 0));
+        dist[c] = 0;
+
+        while(!pq.isEmpty()) {
+            Node poll = pq.poll();
+            int idx = poll.idx;
+            int cost = poll.cost;
+
+            if(dist[idx] < cost) continue;
+
+//            ArrayList<Node> adj = adjs.get(idx);
+
+//            for(Node nxt : adj) {
+//                if(dist[nxt.idx] > dist[idx] + nxt.cost) {
+//                    dist[nxt.idx] = dist[idx] + nxt.cost;
+//                    pq.offer(new Node(nxt.idx, dist[nxt.idx]));
+//                }
+//            }
+            for(int i = 0; i < adjs.get(idx).size(); i++ ) {
+                int c = dist[idx] + adjs.get(idx).get(i).cost;
+                if(c < dist[adjs.get(idx).get(i).idx]) {
+                    dist[adjs.get(idx).get(i).idx] = c;
+                    pq.add(new Node(adjs.get(idx).get(i).idx, c));
+                }
+            }
+        }
+    }
+
+    static void init() throws IOException {
+        st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        d = Integer.parseInt(st.nextToken());
+        c = Integer.parseInt(st.nextToken());
+
+        adjs = new ArrayList<ArrayList<Node>>();
+        dist = new int[n+1];
+
+        Arrays.fill(dist, NOT_VISITED);
+//        for(int i = 0; i <= n; i++) {
+//            dist[i] = NOT_VISITED;
+//        }
+
+        for(int i = 0; i <= n; i++) {
+            adjs.add(new ArrayList<>());
+        }
+
+        for(int i = 0; i < d; i++) {
+            st = new StringTokenizer(br.readLine());
+            int to =  Integer.parseInt(st.nextToken());
+            int from = Integer.parseInt(st.nextToken());
+            int s = Integer.parseInt(st.nextToken());
+            adjs.get(from).add(new Node(to, s));
+        }
+    }
+
+    static class Node implements Comparable<Node>{
+        int idx, cost;
+
+        Node(int idx, int cost) {
+            this.idx = idx;
+            this.cost = cost;
+        }
+
+        @Override
+        public int compareTo(Node o) {
+            return this.cost - o.cost;
+        }
+    }
+}

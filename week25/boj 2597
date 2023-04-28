@@ -1,0 +1,38 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+    static public void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int[] s = new int[n+1];
+        int sum = 0;
+
+        for(int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            int k = Integer.parseInt(st.nextToken());
+            sum += k;
+            s[i+1] = k;
+        }
+
+        int[] dp = new int[n+1];
+
+        if(n == 1 || n ==2 ) {
+            System.out.println(sum );
+            return;
+        }
+
+        dp[1] = s[1];
+        dp[2] = s[2];
+        dp[3] = s[3];
+
+        for(int i = 4; i <= n; i++) {
+            dp[i] = Math.min(dp[i-2], dp[i-3]) + s[i];
+        }
+
+        System.out.println(sum - Math.min(dp[n-1], dp[n-2]));
+    }
+
+}

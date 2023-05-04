@@ -1,0 +1,37 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int[] dp = new int[n+1];
+
+        if(n ==1 || n == 3) {
+            System.out.println("SK");
+            return;
+        }
+        if(n == 2) {
+            System.out.println("CY");
+            return;
+        }
+        dp[1] = 1;
+        dp[2] = 2;
+        dp[3] = 1;
+
+
+        // 1 : 1 , 2 : 1+1 , 3 : 3, 4: 3+1, 5: 3+1+1
+        // dp[i] : i번째에서의 턴
+        // dp[i] = dp[3] + dp[i-3]
+        for(int i = 4; i <= n; i++) {
+            dp[i] = dp[3] + dp[i-3];
+        }
+
+        System.out.println(dp[n] % 2 == 1 ? "SK" : "CY");
+    }
+}

@@ -1,0 +1,38 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int k = Integer.parseInt(st.nextToken());
+        int[] dp = new int[1000000];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+
+        for(int turn = 0; turn < n; turn++) {
+            st = new StringTokenizer(br.readLine());
+            int num = Integer.parseInt(st.nextToken());
+
+            // 동전의 개수 최소
+            // 가치가 같은 동전이 여러번 주어질 수 있따
+            // 불가능한 경우 -1
+
+            // dp[i] : 가치의 합이 i일때 동전의 최소 개수
+            // 동전 k일때 dp[i+k] = dp[i] + dp[i+k]
+            // dp[5] = 1, dp[10] = 2
+            // dp[1] = 1, dp[2] = 2
+
+            for(int j = 0; j < k; j++){
+                if(dp[j]== Integer.MAX_VALUE) continue;
+                dp[j+num] = Math.min(dp[j+num], dp[j] + 1);
+            }
+        }
+//        for(int i = 0; i <= k; i++){
+//            System.out.println(i + " : " + dp[i]);
+//        }
+        System.out.println(dp[k] == Integer.MAX_VALUE ? -1 : dp[k]);
+    }
+}

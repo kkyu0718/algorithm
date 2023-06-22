@@ -1,0 +1,18 @@
+// you can also use imports, for example:
+// import java.util.*;
+
+// you can write to stdout for debugging purposes, e.g.
+// System.out.println("this is a debug message");
+
+class Solution {
+    int solution(int N) {
+ 
+    int a = N & 0x55555555; // 0B01010101010101010101010101010101
+    int b = N & 0xAAAAAAAA; // 0B10101010101010101010101010101010
+ 
+    if (a + b == N) return a;
+ 
+    return -1;
+ 
+}
+}

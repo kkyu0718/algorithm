@@ -1,0 +1,67 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        // 10:34
+        // 가벼운 순으로 주어짐. 같은 무게 여러개 가능
+        // dp[i][j] : i번째 구슬을 올릴 때 무게 j를 만들 수 있는지 여부 - 1이면 가능
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int MAX_LIMIT = 40000;
+
+        int N = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(br.readLine());
+        int[] choo = new int[N];
+        for(int i = 0; i < N; i++) {
+            choo[i] = Integer.parseInt(st.nextToken());
+        }
+
+        st = new StringTokenizer(br.readLine());
+        int M = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(br.readLine());
+        int[] goo = new int[M];
+        for(int i = 0; i < M; i++) {
+            goo[i] = Integer.parseInt(st.nextToken());
+        }
+
+        int[][] dp = new int[N][MAX_LIMIT+1];
+
+        // 초기화
+        dp[0][choo[0]] = 1;
+
+        for(int i = 1; i < N; i++) {
+            for(int j = 1; j < MAX_LIMIT + 1; j++) {
+                if(dp[i-1][j] == 0) continue;
+
+                // dp[i-1][j] == 1 이라면
+                int weight = choo[i];
+
+                // 1. 이번 추는 사용하지 않는 경우
+                dp[i][j] = 1;
+
+                // 2. 이번 추를 사용하는 경우 - 이전에 더하고 빼는 경우
+                int add = j + weight;
+                int sub = Math.abs(j - weight);
+                if(add < MAX_LIMIT+1) dp[i][add] = 1;
+                dp[i][sub] = 1;
+
+                // 3. 이번 추를 사용하는 경우 - 이번 추 하나만 이용하는 경우
+                dp[i][weight] = 1;
+            }
+        }
+
+        for(int i = 0; i < M; i++) {
+            int goal = goo[i];
+            if(dp[N-1][goal] == 1) bw.write("Y");
+            else bw.write("N");
+
+            if(i != M-1) bw.write(" ");
+        }
+
+        bw.flush();
+    }
+
+}

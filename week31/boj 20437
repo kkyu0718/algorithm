@@ -1,0 +1,60 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int T = Integer.parseInt(st.nextToken());
+
+        for(int i = 0; i < T; i++) {
+            st = new StringTokenizer(br.readLine());
+            String s = st.nextToken();
+            st = new StringTokenizer(br.readLine());
+            int K = Integer.parseInt(st.nextToken());
+            solution(s, K);
+        }
+    }
+
+    public static void solution(String s, int K) {
+        int shortest = Integer.MAX_VALUE;
+        int longest = -1;
+
+        HashMap<String, ArrayList<Integer>> hashMap = new HashMap<>();
+        for(int i = 0; i < s.length(); i++) {
+            String e = s.charAt(i)+"";
+            if(hashMap.containsKey(e)) {
+                ArrayList<Integer> lst = new ArrayList<>(hashMap.get(e));
+                lst.add(i);
+                hashMap.put(e, lst);
+            }
+            else {
+                ArrayList<Integer> lst = new ArrayList<>();
+                lst.add(i);
+                hashMap.put(e, lst);
+            }
+        }
+
+        for(String e : hashMap.keySet()) {
+            ArrayList<Integer> lst = hashMap.get(e);
+            int n = lst.size();
+            if(n < K) continue;
+
+            for(int i = 0; i <= n-K; i++) {
+                int num1 = lst.get(i);
+                int num2 = lst.get(i+K-1);
+                int num = num2 - num1 + 1;
+//                System.out.println("e = " + e +" num = " + num);
+                shortest = Math.min(shortest, num);
+                longest = Math.max(longest, num);
+
+            }
+        }
+
+        if(longest == -1) System.out.println(-1);
+        else System.out.println(shortest + " " + longest);
+    }
+
+}

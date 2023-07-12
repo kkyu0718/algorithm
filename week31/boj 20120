@@ -1,0 +1,134 @@
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int N = Integer.parseInt(st.nextToken());
+        int[] idx = new int[N];
+        String[][] map = new String[N][100];
+
+
+
+        for(int i = 0; i < N; i++) {
+            idx[i] = i;
+            st = new StringTokenizer(br.readLine());
+            String s = st.nextToken();
+//            System.out.println("s = " + s);
+            String[] parsed = parsing(s);
+            map[i] = parsed;
+//            print(parsed);
+        }
+
+
+        Arrays.sort(map, new cmp());
+        for(int i = 0; i < N; i++) {
+            for(int j = 0; j < 100; j++) {
+                if(map[i][j] == null) break;
+                bw.write(map[i][j]);
+            }
+            bw.write("\n");
+        }
+
+        bw.flush();
+    }
+
+    public static String[] parsing(String s) {
+        String[] result = new String[100];
+        int i = 0;
+        int idx = 0;
+        while(i < s.length()){
+            char e = s.charAt(i);
+            if(Character.isAlphabetic(e)) {
+                result[idx] = e+"";
+                i++;
+                idx++;
+            }
+            else {
+                int j = i;
+                while(j < s.length() && Character.isDigit(s.charAt(j))) {
+                    j++;
+                }
+                result[idx] = s.substring(i, j);
+                i = j;
+                idx++;
+            }
+        }
+
+        return result;
+    }
+
+    public static void print(String[] arr) {
+        for (String s : arr) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    public static class cmp implements Comparator<String[]>{
+
+        @Override
+        public int compare(String[] o1, String[] o2) {
+            for(int i = 0; i < 100; i++) {
+                String s1 = o1[i];
+                String s2 = o2[i];
+                if(s1 == null && s2 == null) return 0;
+                if(s1 == null) return -1;
+                if(s2 == null) return 1;
+
+                if(s1.equals(s2)) continue;
+
+                if((isAlpha(s1) && !isAlpha(s2))) {
+                    return 1;
+                }
+
+                else if((!isAlpha(s1) && isAlpha(s2))) {
+                    return -1;
+                }
+
+                else if(isAlpha(s1) && isAlpha(s2)) {
+                    char c1 = s1.charAt(0);
+                    char c2 = s2.charAt(0);
+
+                    if(Character.isUpperCase(c1) && Character.isUpperCase(c2)) {
+                        return c1 - c2;
+                    }
+                    else if (Character.isLowerCase(c1) && Character.isLowerCase(c2)) {
+                        return c1 - c2;
+                    }
+                    else {
+                        if(Math.abs(c1 - c2) == 32) return c1 - c2;
+                        return Character.toLowerCase(c1) - Character.toLowerCase(c2);
+                    }
+                }
+                else {
+                    BigInteger n1 = new BigInteger(s1);
+                    BigInteger n2 = new BigInteger(s2);
+                    if(n1.equals(n2)) {
+                        int i1 = 0;
+                        int i2 = 0;
+                        while(i1 < s1.length() && s1.charAt(i1) == '0') {
+                            i1++;
+                        }
+                        while(i2 < s2.length() && s2.charAt(i2) == '0') {
+                            i2++;
+                        }
+                        return i1 - i2;
+                    }
+                    else {
+                        return n1.compareTo(n2);
+                    }
+                }
+            }
+
+            return 0;
+        }
+    }
+
+    public static boolean isAlpha(String s) {
+        return s.length() == 1 && Character.isAlphabetic(s.charAt(0));
+    }
+}

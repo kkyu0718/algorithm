@@ -1,0 +1,58 @@
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
+
+public class Main {
+    static ArrayList<Node> lst = new ArrayList<>();
+    static boolean answer = true;
+
+
+    public static void main(String[] args) throws IOException {
+        //1:34
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+
+        int N = Integer.parseInt(st.nextToken());
+        for(int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
+            int mid = Integer.parseInt(st.nextToken());
+            int r = Integer.parseInt(st.nextToken());
+            lst.add(new Node(i, mid - r, 0));
+            lst.add(new Node(i, mid + r, 1));
+        }
+
+        Collections.sort(lst, (Node o1, Node o2) -> {
+            if(o1.num == o2.num) answer = false;
+            return o1.num - o2.num;
+        });
+
+        Stack<Node> stk = new Stack<>();
+        for (Node node : lst) {
+            if(node.dir == 0) stk.push(node);
+            else {
+                if(!stk.isEmpty() && stk.peek().idx == node.idx) stk.pop();
+                else {
+                    answer = false;
+                    break;
+                }
+            }
+        }
+        if(!answer || !stk.isEmpty()) bw.write("NO");
+        else bw.write("YES");
+        bw.flush();
+
+    }
+
+    static class Node{
+        private int idx, num, dir; //0 : left
+
+        public Node(int idx, int num, int dir) {
+            this.idx = idx;
+            this.num = num;
+            this.dir = dir;
+        }
+    }
+
+}

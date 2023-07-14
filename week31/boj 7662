@@ -1,0 +1,64 @@
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
+
+public class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+    public static void main(String[] args) throws IOException {
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int T = Integer.parseInt(st.nextToken());
+        // 2:26
+        // 동일한 정수 삽입 가능
+        // D 1 최댓값 삭제, D -1 최솟값 삭제 -> 둘 이상이면 하나만 삭제
+        // 비어있는데 삭제 -> 무시
+
+        // 333 45 -45
+        while(T-- > 0) {
+            st = new StringTokenizer(br.readLine());
+            int n = Integer.parseInt(st.nextToken());
+            solution(n);
+        }
+        bw.flush();
+    }
+
+    public static void solution(int n) throws IOException {
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+        while(n-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            String command = st.nextToken();
+            int num = Integer.parseInt(st.nextToken());
+
+            if(command.equals("I")) {
+                map.put(num, map.getOrDefault(num, 0) + 1);
+            }
+            else if(map.size() == 0) {
+                continue;
+            }
+            else if (num == -1) { //최소값 삭제
+                Integer firstKey = map.firstKey();
+                if(map.get(firstKey) == 1) {
+                    map.remove(firstKey);
+                }
+                else {
+                    map.put(firstKey, map.get(firstKey) - 1);
+                }
+            }
+            else {
+                Integer lastKey = map.lastKey();
+                if(map.get(lastKey) == 1) {
+                    map.remove(lastKey);
+                }
+                else {
+                    map.put(lastKey, map.get(lastKey) - 1);
+                }
+            }
+
+        }
+
+        if(map.size() == 0) bw.write("EMPTY\n");
+        else bw.write( map.lastKey() + " " + map.firstKey() + "\n");
+    }
+}

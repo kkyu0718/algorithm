@@ -1,0 +1,53 @@
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
+
+public class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+    public static void main(String[] args) throws IOException {
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        char[] temps = st.nextToken().toCharArray();
+        Stack<String> stk = new Stack<>();
+        StringBuilder sb = new StringBuilder();
+
+        // () 표시
+        for(int i = 0; i < temps.length; i++) {
+            String elem = temps[i] + "";
+            if(elem.matches("[A-Z]")) {
+//                System.out.println("elem = " + elem);
+                sb.append(elem);
+            }
+            else if (elem.equals("(")) {
+                stk.push(elem);
+            }
+            else if(elem.equals(")")) {
+                while(!stk.isEmpty() && !stk.peek().equals("(")) {
+                    sb.append(stk.pop());
+                }
+                stk.pop();
+            }
+            else {
+                while(!stk.isEmpty() && priority(stk.peek()) >= priority(elem)) {
+                    sb.append(stk.pop());
+                }
+                stk.push(elem);
+            }
+        }
+
+        while(!stk.isEmpty()) {
+            sb.append(stk.pop());
+        }
+
+        bw.write(sb.toString());
+        bw.flush();
+    }
+
+    public static int priority(String s) {
+        if(s.equals("(") || s.equals(")")) return 0;
+        else if(s.equals("*") || s.equals("/")) return 2;
+        else return 1;
+    }
+
+}

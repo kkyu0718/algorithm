@@ -1,0 +1,105 @@
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
+
+public class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static ArrayList<ArrayList<Integer>> result;
+    static ArrayList<Ans> lst;
+    static int visit[];
+
+    public static void main(String[] args) throws IOException {
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        String s = st.nextToken();
+        lst = new ArrayList<>();
+        Stack<Node> stk = new Stack<>();
+        result = new ArrayList<>();
+
+        for(int i = 0; i < s.length(); i++) {
+            String elem = s.charAt(i) + "";
+
+            if(elem.equals(")")) {
+                while (!stk.isEmpty() && !stk.peek().str.equals("(")) {
+                    stk.pop();
+                }
+                Node poped = stk.pop();
+                lst.add(new Ans(poped.idx, i));
+            }
+            else {
+                stk.push(new Node(i, elem));
+            }
+        }
+
+        visit = new int[lst.size()];
+        combination(0);
+
+        String[] strings = new String[result.size() - 1];
+
+
+        for(int i = 0; i < result.size() - 1; i++) {
+            ArrayList<Integer> ans = result.get(i);
+            StringBuilder sb = new StringBuilder();
+
+            for(int j = 0; j < s.length(); j++) {
+                if(ans.contains(j)) {
+                    continue;
+                }
+                else {
+                    sb.append(s.charAt(j) + "");
+                }
+            }
+            strings[i] = sb.toString();
+        }
+
+        Arrays.sort(strings);
+        for (int i = 0; i < strings.length; i++) {
+            String string = strings[i];
+            if(i + 1 < strings.length && string.equals(strings[i+1])) continue;
+            bw.write(string + "\n");
+        }
+        bw.flush();
+    }
+
+    static public void combination(int idx) {
+        if(idx == lst.size()) {
+            ArrayList<Integer> ans = new ArrayList<Integer>();
+            for(int i = 0; i < visit.length; i++) {
+                if(visit[i] == 1) {
+                    Ans a = lst.get(i);
+                    ans.add(a.start);
+                    ans.add(a.end);
+                }
+            }
+            result.add(ans);
+            return;
+        }
+
+
+        visit[idx] = 1;
+        combination(idx+1);
+        visit[idx] = 0;
+        combination(idx+1);
+
+    }
+
+    static class Ans {
+        int start, end;
+
+        public Ans(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
+
+    static class Node {
+        int idx;
+        String str;
+
+        public Node(int idx, String str) {
+            this.idx = idx;
+            this.str = str;
+        }
+    }
+
+}

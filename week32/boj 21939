@@ -1,0 +1,110 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static StringTokenizer st;
+    static TreeMap<Integer, TreeSet<Integer>> treeMap = new TreeMap<>();
+    static HashMap<Integer, Integer> map =new HashMap<>();
+
+
+    public static void printTreeMap() {
+        for (Integer key : treeMap.keySet()) {
+            System.out.println("key = " + key + " values = " + treeMap.get(key));
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        // 9:45
+        // recommend x : x가 1이면 가장 어려운거. 어려운게 여러개이면 문제번호 가장 큰것
+        // x 가 -1 이면 가장 쉬운거. 쉬운게 여러개이면 문제번호 작은거
+        // add P L : 문제 하나에 대응되는 난이도 여러개일수도 있다
+        // solved P : P 제거
+
+        st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        while (N-- > 0) {
+            st = new StringTokenizer(br.readLine());
+            int P = Integer.parseInt(st.nextToken());
+            int L = Integer.parseInt(st.nextToken());
+
+            if (treeMap.containsKey(L)) {
+                TreeSet<Integer> q = treeMap.get(L);
+                q.add(P);
+                treeMap.put(L, q);
+                map.put(P, L);
+
+            } else {
+                TreeSet<Integer> q = new TreeSet<>();
+                q.add(P);
+                treeMap.put(L, q);
+
+                map.put(P, L);
+            }
+
+        }
+
+//        printTreeMap();
+
+        st = new StringTokenizer(br.readLine());
+        int M = Integer.parseInt(st.nextToken());
+        while (M-- > 0) {
+            st = new StringTokenizer(br.readLine());
+
+            String cmd = st.nextToken();
+            // 같은 난이도에는 같은 문제번호 없다
+            if (cmd.equals("add")) {
+                int P = Integer.parseInt(st.nextToken());
+                int L = Integer.parseInt(st.nextToken());
+                if (treeMap.containsKey(L)) {
+                    TreeSet<Integer> q = treeMap.get(L);
+                    q.add(P);
+                    treeMap.put(L, q);
+                    map.put(P, L);
+                } else {
+                    TreeSet<Integer> q = new TreeSet<>();
+                    q.add(P);
+                    treeMap.put(L, q);
+                    map.put(P, L);
+                }
+            } else if (cmd.equals("recommend")) {
+                int x = Integer.parseInt(st.nextToken());
+                if (x == 1) {
+                    int integer = treeMap.lastKey();
+                    bw.write(treeMap.get(integer).last() + "\n");
+                } else {
+                    int integer = treeMap.firstKey();
+                    bw.write(treeMap.get(integer).first() + "\n");
+                }
+            } else {
+                // solved
+                int P = Integer.parseInt(st.nextToken());
+                Integer L = map.get(P);
+                TreeSet<Integer> integers = treeMap.get(L);
+                if(integers.size() == 1) {
+                    treeMap.remove(L);
+                } else {
+                    integers.remove(P);
+
+                    treeMap.put(L, integers);
+                    map.remove(P);
+                }
+
+
+//                for (Integer key : lst) {
+//                    TreeSet<Integer> integers = treeMap.get(key);
+//                    if(integers.size() == 1) {
+//                        treeMap.remove(key);
+//                    }
+//                    else {
+//                        integers.remove(P);
+//                        treeMap.put(key, integers);
+//                    }
+//                }
+            }
+        }
+        bw.flush();
+    }
+
+}

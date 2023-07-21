@@ -1,0 +1,66 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static StringTokenizer st;
+
+    public static void main(String[] args) throws IOException {
+        //8:34
+
+        st = new StringTokenizer(br.readLine());
+        int T = Integer.parseInt(st.nextToken());
+
+        while(T-- >0) {
+            st = new StringTokenizer(br.readLine());
+            int M = Integer.parseInt(st.nextToken());
+            PriorityQueue<Integer> q1 = new PriorityQueue<>(Collections.reverseOrder());
+            PriorityQueue<Integer> q2 = new PriorityQueue<>();
+
+            int[] arr = new int[M];
+            bw.write(M / 2 + 1 + "\n");
+            st = new StringTokenizer(br.readLine());
+            int mid = Integer.parseInt(st.nextToken());
+            bw.write(mid + " ");
+
+            for (int i = 1; i < M;) {
+//                System.out.println("i = " + i);
+                int n1 = Integer.parseInt(st.nextToken());
+//                System.out.println("n1 = " + n1);
+                i++;
+                if (i % 10 == 0) st = new StringTokenizer(br.readLine());
+                int n2 = Integer.parseInt(st.nextToken());
+//                System.out.println("n2 = " + n2);
+                i++;
+                if (n1 <= mid) {
+                    q1.add(n1);
+                } else {
+                    q2.add(n1);
+                }
+
+                if (n2 <= mid) {
+                    q1.add(n2);
+                } else {
+                    q2.add(n2);
+                }
+
+                if (q1.size() == q2.size()) {
+                    bw.write(mid + " ");
+                } else if (q1.size() < q2.size()) {
+                    q1.add(mid);
+                    mid = q2.poll();
+                    bw.write(mid + " ");
+                } else {
+                    q2.add(mid);
+                    mid = q1.poll();
+                    bw.write(mid + " ");
+                }
+                if((i/2+1) % 10 == 0) bw.write("\n");
+            }
+            bw.write("\n");
+        }
+        bw.flush();
+    }
+
+}

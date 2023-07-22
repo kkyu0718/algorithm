@@ -1,0 +1,128 @@
+import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+public class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static StringTokenizer st;
+
+    static HashMap<Pair, LocalDateTime> map = new HashMap<>();
+
+    public static void main(String[] args) throws IOException {
+        //2:58
+        // 한 사람이 같은 종류의 부품 하나만 대여, but 다른 부품 여러개는 가능
+        // 대여부품마다 벌금
+        // 사전순 출력. 없으면 -1
+        st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        String time = st.nextToken();
+        int days = Integer.parseInt(time.substring(0, 3));
+        int hour = Integer.parseInt(time.substring(4, 6));
+        int min = Integer.parseInt(time.substring(7, 9));
+
+        long lateMin = min + 60 * hour + 60 * 24 * days;
+
+        int F = Integer.parseInt(st.nextToken());
+        HashMap<String, Long> answer = new HashMap<>();
+
+        while(N-- > 0) {
+            st = new StringTokenizer(br.readLine());
+            String s = st.nextToken();
+            int iyear = Integer.parseInt(s.substring(0, 4));
+            int imonth = Integer.parseInt(s.substring(5, 7));
+            int idate = Integer.parseInt(s.substring(8, 10));
+
+            s = st.nextToken();
+            int ihour = Integer.parseInt(s.substring(0, 2));
+            int imin = Integer.parseInt(s.substring(3, 5));
+            String item = st.nextToken();
+            String user = st.nextToken();
+
+            Pair p = new Pair(item, user);
+            LocalDateTime d = LocalDateTime.of(iyear, imonth, idate, ihour, imin);
+
+            if(map.containsKey(p)) {
+                // 반납
+                LocalDateTime remove = map.remove(p);
+                Period diff = Period.between(remove.toLocalDate(), d.toLocalDate());
+                Duration dur = Duration.between(remove.toLocalTime(), d.toLocalTime());
+//                int dy = diff.getYears();
+//                int dm = diff.getMonths();
+//                int dd = diff.getDays();
+                long dinput =  ChronoUnit.MINUTES.between(remove, d);
+
+//                long dinput = ChronoUnit.DAYS.between(remove, d);
+//                System.out.println("dinput = " + dinput);
+//                System.out.println("lateMin = " + lateMin);
+
+                Long money = (dinput - lateMin)*F;
+                if(money <= 0) continue;
+
+                answer.put(p.user, answer.getOrDefault(p.user, 0L) + money);
+
+            }
+            else {
+                map.put(p, d);
+            }
+        }
+
+        ArrayList<String> arrayList = new ArrayList<>(answer.keySet());
+
+        Collections.sort(arrayList);
+
+        if(arrayList.size() == 0) {
+            bw.write("-1");
+        } else {
+            for (String s : arrayList) {
+                bw.write(s + " " + answer.get(s) + "\n");
+            }
+        }
+
+
+        bw.flush();
+    }
+
+    static class Pair {
+        String item;
+        String user;
+
+        Pair(String item, String user) {
+            this.item = item;
+            this.user = user;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Pair pair = (Pair) o;
+            return Objects.equals(item, pair.item) && Objects.equals(user, pair.user);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(item, user);
+        }
+    }
+
+    static class Node {
+        String name;
+        long money;
+
+        public Node(String name, long money) {
+            this.name = name;
+            this.money = money;
+        }
+    }
+
+}
+
+//4 000/00:05 1
+//2021-01-01 09:12 arduino tony9402
+//2021-01-01 09:13 monitor tony9402
+//2022-01-02 09:18 arduino tony9402
+//2022-01-02 09:18 monitor tony9402

@@ -1,0 +1,200 @@
+import java.io.*;
+
+import java.util.*;
+
+public class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static StringTokenizer st;
+    static HashMap<Integer, TreeSet<Node>> level = new HashMap<>();
+    static HashMap<Integer, TreeSet<Node>> category = new HashMap<>();
+    static HashMap<Integer, TreeSet<Node>> problem = new HashMap<>();
+
+    static TreeSet<Node> treeSet = new TreeSet<>();
+
+    public static void main(String[] args) throws IOException {
+        // 2:32
+        st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+
+        while(N-- > 0) {
+            st = new StringTokenizer(br.readLine());
+            int P = Integer.parseInt(st.nextToken());
+            int L = Integer.parseInt(st.nextToken());
+            int G = Integer.parseInt(st.nextToken());
+
+            add(P, L, G);
+        }
+
+        st = new StringTokenizer(br.readLine());
+        int M = Integer.parseInt(st.nextToken());
+        
+        while(M-- > 0) {
+            st = new StringTokenizer(br.readLine());
+            
+            String cmd = st.nextToken();
+            if(cmd.equals("add")) {
+                int P = Integer.parseInt(st.nextToken());
+                int L = Integer.parseInt(st.nextToken());
+                int G = Integer.parseInt(st.nextToken());
+
+                add(P, L, G);
+            } else if (cmd.equals("recommend")) {
+                int G = Integer.parseInt(st.nextToken());
+                int X = Integer.parseInt(st.nextToken());
+
+                int num = recommend(G, X);
+                bw.write(num + "\n");
+            } else if (cmd.equals("recommend2")) {
+                int X = Integer.parseInt(st.nextToken());
+
+                int num = recommend2(X);
+                bw.write(num + "\n");
+            } else if (cmd.equals("recommend3")) {
+                int X = Integer.parseInt(st.nextToken());
+                int L = Integer.parseInt(st.nextToken());
+
+                int num = recommend3(X, L);
+                bw.write(num + "\n");
+            } else if (cmd.equals("add")) {
+                int P = Integer.parseInt(st.nextToken());
+                int L = Integer.parseInt(st.nextToken());
+                int G = Integer.parseInt(st.nextToken());
+
+                add(P, L, G);
+            } else {
+                int P = Integer.parseInt(st.nextToken());
+                solve(P);
+            }
+
+            bw.flush();
+        }
+    }
+
+    private static void solve(int p) {
+        TreeSet<Node> nodes = problem.get(p);
+        for (Node node : nodes) {
+            treeSet.remove(node);
+
+            TreeSet<Node> nodes1 = level.get(node.L);
+            if(nodes1.size() == 1) {
+                level.remove(node.L);
+            }
+            else {
+                nodes1.remove(node);
+                level.put(node.L, nodes1);
+            }
+
+            TreeSet<Node> nodes2 = category.get(node.G);
+            if(nodes2.size() == 1) {
+                category.remove(node.G);
+            }
+            else {
+                nodes2.remove(node);
+                category.put(node.G, nodes2);
+            }
+
+
+            problem.remove(node.P);
+        }
+    }
+
+    private static int recommend3(int x, int l) {
+        if(x == 1) {
+            while(l <= 100 && !level.containsKey(l)) {
+                l++;
+            }
+            if(l == 101) return -1;
+            else return level.get(l).first().P;
+        }
+        else {
+            l--;
+            while(l > 0 && !level.containsKey(l)) {
+                l--;
+            }
+            if(l == 0) return -1;
+            else return level.get(l).last().P;
+        }
+
+    }
+
+    private static int recommend2(int x) {
+        if(x == 1) {
+            Node last = treeSet.last();
+            return last.P;
+        }
+        else {
+            Node first = treeSet.first();
+            return first.P;
+        }
+    }
+
+    public static int recommend(int g, int x) {
+        if(x == 1) {
+            TreeSet<Node> nodes = category.get(g);
+            return nodes.last().P;
+        }
+        else {
+            TreeSet<Node> nodes = category.get(g);
+            return nodes.first().P;
+        }
+    }
+
+    public static void add(int P, int L, int G) {
+        treeSet.add(new Node(P, L, G));
+        if(level.containsKey(L)) {
+            TreeSet<Node> nodes = level.get(L);
+            nodes.add(new Node(P, L, G));
+            level.put(L, nodes);
+        }
+        else {
+            TreeSet<Node> nodes = new TreeSet<>();
+            nodes.add(new Node(P, L, G));
+            level.put(L, nodes);
+        }
+        if(category.containsKey(G)) {
+            TreeSet<Node> nodes = category.get(G);
+            nodes.add(new Node(P, L, G));
+            category.put(G, nodes);
+        }
+        else {
+            TreeSet<Node> nodes = new TreeSet<>();
+            nodes.add(new Node(P, L, G));
+            category.put(G, nodes);
+        }
+        if(problem.containsKey(P)) {
+            TreeSet<Node> nodes = problem.get(P);
+            nodes.add(new Node(P, L, G));
+            problem.put(P, nodes);
+        }
+        else {
+            TreeSet<Node> nodes = new TreeSet<>();
+            nodes.add(new Node(P, L, G));
+            problem.put(P, nodes);
+        }
+    }
+    static class Node implements Comparable<Node> {
+        int P, L, G;
+        public Node(int p, int l, int g) {
+            P = p;
+            L = l;
+            G = g;
+        }
+
+        @Override
+        public int compareTo(Node o) {
+            if(this.L == o.L) return this.P - o.P;
+            return this.L - o.L;
+        }
+
+        @Override
+        public String toString() {
+            return "Node{" +
+                    "P=" + P +
+                    ", L=" + L +
+                    ", G=" + G +
+                    '}';
+        }
+    }
+
+}

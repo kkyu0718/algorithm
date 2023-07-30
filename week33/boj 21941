@@ -1,0 +1,99 @@
+import java.io.*;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static StringTokenizer st;
+    static int[][] dp;
+    static String S;
+
+
+    public static void main(String[] args) throws IOException {
+        //1:13
+        // 1. 여러부분 존재해도 한번만 지움
+//        2. 문자 하나 지우고 1점
+        st = new StringTokenizer(br.readLine());
+        S = st.nextToken();
+
+        st = new StringTokenizer(br.readLine());
+        int M = Integer.parseInt(st.nextToken());
+
+        String[] A = new String[M];
+        int[] X = new int[M];
+
+        for(int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
+            A[i] = st.nextToken();
+            X[i] = Integer.parseInt(st.nextToken());
+        }
+
+        // 어디를 지울지 어떻게 정하지? 최댓값?
+        // 1. 문자열 삭제 2. 한 문자 삭제
+        int n = S.length();
+        dp = new int[n][n];
+
+        // 초기화 1. 1, 2. 문자열
+        for(int i = 0; i < n; i++) {
+            dp[i][i] = 1;
+        }
+
+        for(int i = 0; i < M; i++) {
+            String s = A[i];
+            int score = X[i];
+            findAndSave(s, score);
+        }
+
+//        print(dp);
+        for(int i =n -1; i >= 0; i--) {
+            for(int j = i+1 ; j < n; j++) {
+                dp[i][j] = Math.max(dp[i][j], dp[i][j-1] + 1);
+                for(int k = i; k < j; k++) {
+                    dp[i][j] = Math.max(dp[i][j], dp[i][k] + dp[k+1][j]);
+                }
+            }
+//            print(dp);
+        }
+//        print(dp);
+        System.out.println(dp[0][n-1]);
+    }
+
+    private static void print(int[][] dp) {
+        for(int i = 0; i < dp.length; i++) {
+            for(int j = 0; j < dp[0].length; j++) {
+                System.out.print(String.format("%8d", dp[i][j]));
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    private static void findAndSave(String s, int score) {
+        Pattern p = Pattern.compile(s);
+        Matcher m = p.matcher(S);
+
+        int lastStart = 0;
+
+        while(lastStart < S.length()) {
+            m.region(lastStart, S.length());
+            if(m.find()) {
+                int start = m.start();
+                int end = m.end() - 1;
+
+                dp[start][end] = Math.max(dp[start][end], score);
+                lastStart = start + 1;
+            } else {
+                break;
+            }
+        }
+    }
+
+}
+
+//abcd
+//        2
+//        abc 2
+//        cd 4
